@@ -34,10 +34,11 @@ OpenWebUI forwards user email via `X-OpenWebUI-User-Email`, and the proxy maps t
 
 ### 1. Clone this repo
 
-```sh
+```
+sh
 git clone https://github.com/<your-user>/nanogpt-proxy
 cd nanogpt-proxy
-
+```
 2. Set encryption password
 
 Edit proxy/.env:
