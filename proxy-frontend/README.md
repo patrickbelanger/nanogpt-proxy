@@ -68,13 +68,13 @@ nvm list available
 Install Node.js 22.x:
 
 ```bash
-nvm install 22.0.0
+nvm install 20.19.0
 ```
 
-Use Node.js 22.x globally:
+Use Node.js 20.x globally:
 
 ```bash
-nvm use 22.0.0
+nvm use 20.19.0
 ```
 
 🔄 Verify Node.js version:
@@ -83,4 +83,4 @@ nvm use 22.0.0
 node -v
 ```
 
-Should output: v22.x.x
+Should output: v20.x.x
