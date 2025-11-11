@@ -41,7 +41,7 @@ Do not use Node.js 22 until official prebuilt binaries are available for this mo
 
 ### 1. Clone this repo
 
-```
+```bash
 sh
 git clone https://github.com/<your-user>/nanogpt-proxy
 cd nanogpt-proxy
@@ -56,23 +56,25 @@ DB_ENCRYPTION_KEY=CHANGE_THIS_TO_A_RANDOM_32_BYTE_VALUE
 
 3. Launch stack
 
+```bash
 docker compose up -d --build
+```
 
 4. Add a user + API key
 
-```
+```bash
 docker compose exec proxy node init-db.js add-user alice@example.com sk-abc123...
 ```
 
 List all users:
 
-```
+```bash
 docker compose exec proxy node init-db.js list
 ```
 
 Delete a user:
 
-```
+```bash
 docker compose exec proxy node init-db.js del-user alice@example.com
 ```
 

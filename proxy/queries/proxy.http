@@ -1,0 +1,9 @@
+### GET models
+GET http://localhost:3000/v1/models
+
+###
+
+### POST chat completion
+POST http://localhost:3000/v1/chat/completions
+
+###
