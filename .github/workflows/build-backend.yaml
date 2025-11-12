@@ -40,3 +40,9 @@ jobs:
         with:
           name: coverage-report-backend
           path: proxy/coverage
+
+      - name: Coverage Summary in PR
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          coverage-file: ./coverage/coverage-final.json
