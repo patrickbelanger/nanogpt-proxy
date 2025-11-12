@@ -9,7 +9,7 @@ on:
       - 'proxy/**'
 
 jobs:
-  test-frontend:
+  test-backend:
     runs-on: ubuntu-latest
 
     defaults:
