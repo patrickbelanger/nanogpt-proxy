@@ -1,11 +1,11 @@
 version: '3.9'
 
 services:
-  proxy-frontend:
+  proxy-frontend-js:
     image: node:20-alpine
     working_dir: /app
     command: sh -c "npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173"
-    build: proxy-frontend-js
+    build: proxy-js-frontend
     container_name: nanogpt-proxy-frontend
     restart: unless-stopped
     ports:
