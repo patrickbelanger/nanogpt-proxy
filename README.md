@@ -35,7 +35,7 @@ OpenWebUI forwards user email via `X-OpenWebUI-User-Email`, and the proxy maps t
 🛑 Warning: This project uses `better-sqlite3`, which relies on native modules.
 💡 To avoid installation issues on Windows:
 
-Use Node.js 20.x via [nvm](proxy-frontend/README.md)
+Use Node.js 20.x via [nvm](proxy-frontend-js/README.md)
 
 Do not use Node.js 22 until official prebuilt binaries are available for this module.
 
