@@ -12,7 +12,7 @@ export class Environment {
             Environment.#dotenvLoaded = true;
         }
 
-        rawKey = process.env.DB_ENCRYPTION_KEY;
+        const rawKey = process.env.DB_ENCRYPTION_KEY;
 
         if (!rawKey) {
             throw new Error('DB_ENCRYPTION_KEY missing in environment');
