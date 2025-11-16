@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import { Environment } from './environment.js';
 import { Cryptor } from './cryptor.js';
+import { DatabaseHandler } from './databaseHandler.js';
 
 const app = express();
 
