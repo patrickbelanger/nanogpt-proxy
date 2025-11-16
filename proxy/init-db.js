@@ -38,6 +38,26 @@ const cmd = process.argv[2];
 const email = process.argv[3];
 const apiKey = process.argv[4];
 
+const fs = await import('fs');
+
+if (cmd === 'import') {
+    const jsonFile = email; // reusing email arg for file path
+    if (!jsonFile) {
+        console.log('Usage: import <json-file>');
+        process.exit(1);
+    }
+    const data = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+    const insert = db.prepare('INSERT OR REPLACE INTO users VALUES (?, ?)');
+    const importMany = db.transaction((users) => {
+        for (const user of users) {
+            insert.run(user.email, encrypt(user.api_key));
+        }
+    });
+    importMany(data);
+    console.log(`✅ Imported ${data.length} user(s)`);
+    process.exit(0);
+}
+
 if (cmd === 'add-user') {
     if (!email || !apiKey) {
         console.log('Usage: add-user <email> <apiKey>');
@@ -48,7 +68,7 @@ if (cmd === 'add-user') {
 } else if (cmd === 'list') {
     const users = db.prepare('SELECT email, api_key FROM users').all();
     users.forEach(user => {
-        console.log({ email: user.email, api_key: decrypt(user.api_key) });
+        console.log(JSON.stringify({ email: user.email, api_key: decrypt(user.api_key) }));
     });
 } else if (cmd === 'del-user') {
     db.prepare('DELETE FROM users WHERE email = ?').run(email);
