@@ -1,30 +1,22 @@
+#!/usr/bin/env node
+
 import express from 'express';
 import helmet from 'helmet';
-import sqlite from 'better-sqlite3';
-import crypto from 'crypto';
-import dotenv from 'dotenv';
 import axios from 'axios';
 
-dotenv.config();
+import { Environment } from './environment.js';
+import { Cryptor } from './cryptor.js';
 
 const app = express();
-const DB_PATH = './keys.db';
-const db = sqlite(DB_PATH);
-const key = process.env.DB_ENCRYPTION_KEY;
+
+const db = new DatabaseHandler().db;
+
 const API_BASE = 'https://nano-gpt.com/api';
 const SUBSCRIPTION_API_BASE = API_BASE + '/subscription/v1';
 const REGULAR_API_BASE = API_BASE + '/v1';
 
-if (!key) throw new Error('Missing DB_ENCRYPTION_KEY in environment');
-
-const decrypt = (enc) =>
-    crypto
-        .createDecipheriv(
-            'aes-256-ctr',
-            crypto.createHash('sha256').update(key).digest(),
-            Buffer.alloc(16, 0),
-        )
-        .update(enc, 'hex', 'utf8');
+const env = new Environment();
+const cryptor = new Cryptor(env.dbEncryptionKey);
 
 app.use(helmet());
 app.use(express.json({ limit: '5mb' }));
@@ -55,12 +47,17 @@ app.all('/v1/*', async (req, res) => {
         }
     }
 
-    if (!userEmail) return res.status(400).json({ error: 'Missing user email header' });
+    if (!userEmail) {
+        return res.status(400).json({ error: 'Missing user email header' });
+    }
 
     const row = db.prepare('SELECT api_key FROM users WHERE email = ?').get(userEmail);
-    if (!row) return res.status(401).json({ error: 'User not found in DB' });
+    
+    if (!row) {
+        return res.status(401).json({ error: 'User not found in DB' });
+    }
 
-    const userKey = decrypt(row.api_key);
+    const userKey = cryptor.decrypt(row.api_key);
 
     const upstream = await axios({
         url: `${REGULAR_API_BASE}${req.path}`,
@@ -74,7 +71,6 @@ app.all('/v1/*', async (req, res) => {
         timeout: 180000,
     });
 
-    // Stream the response through
     res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/json');
     upstream.data.pipe(res);
 });

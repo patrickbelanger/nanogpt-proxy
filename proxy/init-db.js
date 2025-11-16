@@ -1,38 +1,23 @@
 #!/usr/bin/env node
-import sqlite from 'better-sqlite3';
-import crypto from 'crypto';
-import dotenv from 'dotenv';
 
-dotenv.config();
+import { readFileSync } from 'fs';
 
-const db = sqlite('keys.db');
-const key = process.env.DB_ENCRYPTION_KEY;
-if (!key) throw new Error('Missing DB_ENCRYPTION_KEY in env');
+import { Environment } from './environment.js';
+import { Cryptor } from './cryptor.js';
+import { DatabaseHandler } from './databaseHandler.js';
 
-const encrypt = (text) =>
-    crypto
-        .createCipheriv(
-            'aes-256-ctr',
-            crypto.createHash('sha256').update(key).digest(),
-            Buffer.alloc(16, 0),
-        )
-        .update(text, 'utf8', 'hex');
+const env = new Environment();
+const cryptor = new Cryptor(env.dbEncryptionKey);
 
-const decrypt = (enc) =>
-    crypto
-        .createDecipheriv(
-            'aes-256-ctr',
-            crypto.createHash('sha256').update(key).digest(),
-            Buffer.alloc(16, 0),
-        )
-        .update(enc, 'hex', 'utf8');
+const db = new DatabaseHandler().db;
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    email TEXT PRIMARY KEY,
-    api_key TEXT NOT NULL
-  );
-`);
+function encrypt(plain) {
+    return cryptor.encrypt(plain);
+}
+
+function decrypt(cipherBlob) {
+    return cryptor.decrypt(cipherBlob);
+}
 
 const cmd = process.argv[2];
 const email = process.argv[3];
@@ -41,12 +26,21 @@ const apiKey = process.argv[4];
 const fs = await import('fs');
 
 if (cmd === 'import') {
-    const jsonFile = email; // reusing email arg for file path
-    if (!jsonFile) {
-        console.log('Usage: import <json-file>');
+    const raw = readFileSync(0, 'utf8');
+    if (!raw.trim()) {
+        console.error('empty stdin');
         process.exit(1);
     }
-    const data = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+
+    let data;
+    try { 
+        data = JSON.parse(raw); 
+    }
+    catch { 
+        console.error('invalid JSON in stdin'); 
+        process.exit(1); 
+    }
+
     const insert = db.prepare('INSERT OR REPLACE INTO users VALUES (?, ?)');
     const importMany = db.transaction((users) => {
         for (const user of users) {
@@ -55,10 +49,7 @@ if (cmd === 'import') {
     });
     importMany(data);
     console.log(`✅ Imported ${data.length} user(s)`);
-    process.exit(0);
-}
-
-if (cmd === 'add-user') {
+} else if (cmd === 'add-user') {
     if (!email || !apiKey) {
         console.log('Usage: add-user <email> <apiKey>');
         process.exit(1);
@@ -77,5 +68,6 @@ if (cmd === 'add-user') {
     console.log(`Usage:
   add-user <email> <apiKey>
   del-user <email>
-  list`);
+  list
+  import < users.json`);
 }
