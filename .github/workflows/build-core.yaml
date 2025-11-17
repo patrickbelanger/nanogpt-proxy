@@ -1,0 +1,51 @@
+name: Core – Build, Lint & Test
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+    paths:
+      - 'packages/core/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'packages/core/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - 'package.json'
+
+jobs:
+  core-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies (monorepo)
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint core
+        run: pnpm lint --filter "@nanogpt-monorepo/core"
+
+      - name: Build core
+        run: pnpm build --filter "@nanogpt-monorepo/core"
+
+      # To enable
+      # - name: Test core
+      #   run: pnpm test --filter "@nanogpt-monorepo/core"

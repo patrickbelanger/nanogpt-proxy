@@ -1,119 +1,235 @@
 # 🧠 NanoGPT Multi-User Proxy for OpenWebUI
 
-A lightweight, Dockerized proxy that lets **multiple users** connect to a shared [OpenWebUI](https://github.com/open-webui/open-webui) instance — **each with their own NanoGPT API key**. It forwards all OpenAI-compatible requests while transparently injecting the correct key per user, with full streaming support and privacy.
+A lightweight, Docker-ready **mono-repo** that exposes a proxy in front of a shared [OpenWebUI](https://github.com/open-webui/open-webui) instance, allowing **multiple users** to connect with **their own NanoGPT API key**.
 
-> 🔐 Keys are stored **encrypted** in SQLite using AES-256, and user-identifying headers are stripped before forwarding to NanoGPT.
+The proxy:
+
+- accepts **OpenAI-compatible** requests (chat, completions, streaming, etc.),
+- transparently injects the correct NanoGPT key per user,
+- keeps keys isolated per account for **privacy and separation of concerns**.
+
+Ideal if you want to host a single OpenWebUI for a small team, but keep each person’s NanoGPT usage independent.
+
+## ⚙️ Tech Stack
+
+### Environment
+
+- **Node.js** 20.x
+- **TypeScript** 5.9.3
+- **pnpm** (workspace + monorepo)
+
+### Backend
+
+- **NestJS** (REST APIs, auth, user & key management)
+- **SQLite** (lightweight data store for users + API keys)
+
+### Frontend
+
+- **React 19** (via Vite)
+- TypeScript
+- Ready to integrate with the admin API & proxy endpoints
 
 ---
 
-## 🚀 Features
+## ⚙️ Tech Stack
 
-- ✅ **Per-user API keys** (no shared quota)
-- ✅ **OpenAI-compatible endpoint** (`/v1/...`)
-- ✅ Supports **chat completions, embeddings, images, streaming**
-- ✅ **Zero user info leaked** to NanoGPT
-- ✅ Fast setup via Docker (~15 minutes)
-- ✅ CLI for adding/removing users
-- ✅ Tiny footprint (Node.js + SQLite + Docker)
+### Environment
 
----
+- **Node.js** 20.x
+- **TypeScript** 5.9.3
+- **pnpm** (workspace + monorepo)
 
-## 🧱 Architecture
+### Backend
 
-OpenWebUI (shared UI) --> Proxy (injects key, strips headers) --> NanoGPT API
-| |
-| |
-User Key Email Encrypted SQLite DB
+- **NestJS** (REST APIs, auth, user & key management)
+- **SQLite** (lightweight data store for users + API keys)
 
+### Frontend
 
-OpenWebUI forwards user email via `X-OpenWebUI-User-Email`, and the proxy maps that to a stored, encrypted API key.
+- **React 19** (via Vite)
+- TypeScript
+- Ready to integrate with the admin API & proxy endpoints
 
 ---
 
-## 📦 Quick Start
+## 📦 Monorepo Layout
 
-### 1. Clone this repo
+This project is managed as a **pnpm workspace + Turborepo**.
 
-```
-sh
-git clone https://github.com/<your-user>/nanogpt-proxy
-cd nanogpt-proxy
-```
-2. Set encryption password
-
-Edit proxy/.env:
-
-DB_ENCRYPTION_KEY=CHANGE_THIS_TO_A_RANDOM_32_BYTE_VALUE
-
-    Tip: generate one with openssl rand -hex 32.
-
-3. Launch stack
-
-docker compose up -d --build
-
-4. Add a user + API key
-
-```
-docker compose exec proxy node init-db.js add-user alice@example.com sk-abc123...
+```text
+nanogpt-monorepo/
+├── apps/
+├──── admin-api/     # Admin API for user & NanoGPT key management
+├──── frontend/      # React UI (admin & proxy frontend)
+├──── proxy/         # NanoGPT proxy API for OpenWebUI
+├── packages/
+├──── core/          # Shared DTOs, types, utilities
+├── docs/
+├──── NVM.md         # Dev environment notes (Node/NVM)
+├── turbo.json       # Turborepo tasks (dev/build/lint/format/test)
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
-List all users:
+# 🧰 Modules
 
+* [apps/admin-api](apps/admin-api)
+  * NestJS backend for:
+    * user management,
+    * association of users ↔ NanoGPT API keys,
+    * admin-facing operations.
+
+* [apps/proxy](apps/proxy)
+  * NestJS proxy that:
+    * exposes OpenAI-compatible endpoints, 
+    * forwards traffic to OpenWebUI / NanoGPT, 
+    * injects the right API key per user, 
+    * supports streaming.
+
+* [apps/frontend](apps/frontend)
+  * React 19 (Vite) frontend:
+    * UI to manage users and API keys, 
+    * UI for configuring / testing the proxy.
+
+* [packages/core](packages/core)
+  * Shared library:
+    * DTOs, types, helpers, 
+    * can be reused across admin-api, proxy and frontend.
+
+# ✅ Prerequisites
+
+Before you start:
+
+* Git
+* Node.js 20.19.0 (recommended)
+* Suggested: use nvm (Node Version Manager) - See: [docs/NVM.md](docs/NVM.md)
+* pnpm (package manager)
+
+Using IntelliJ IDEA?
+
+* See [docs/INTELLIJ-IDEA.md](docs/INTELLIJ-IDEA.md)
+
+# 🌮 Setup
+
+1. Clone the repository
+```bash
+   git clone https://github.com/symphonic-navigator/nanogpt-proxy.git
+   cd nanogpt-proxy
 ```
-docker compose exec proxy node init-db.js list
+
+2. Install Node.js (via nvm – recommended)
+
+If not installed already, follow the guide in [docs/NVM.md](docs/NVM.md), 
+and make sure you’re on Node 20.x:
+
+```bash
+node -v
+# v20.x.x
 ```
 
-Delete a user:
-
-```
-docker compose exec proxy node init-db.js del-user alice@example.com
-```
-
-🔌 OpenWebUI Setup
-
-In your OpenWebUI settings under Connections, add:
-
-Name: NanoGPT Proxy
-Base URL: http://<your-server-ip>:3000/v1
-Model: (leave blank or use 'gpt-4')
-
-Make sure this is set in your OpenWebUI .env:
-
-ENABLE_FORWARD_USER_INFO_HEADERS=true
-
-👨‍💻 Development
-Rebuild after code changes:
-
-```
-docker compose up -d --build
+3. Install pnpm
+```bash
+   npm run install:pnpm
 ```
 
-View proxy logs:
+For a shorter alias (e.g. pnpm instead of pnpm.cmd on Windows),
+see the official docs: https://pnpm.io/installation#using-a-shorter-alias
 
+4. Install all workspace dependencies
+
+From the repo root:
+
+```bash
+pnpm run bootstrap
 ```
-docker compose logs -f proxy
+
+This will:
+* install dependencies for all apps/packages,
+* wire the workspace with pnpm,
+* prepare Turborepo tasks.
+
+# 🧩 Running the Apps
+
+1. Start the full dev stack
+
+From the repo root:
+
+```bash
+pnpm dev
+# alias for: turbo dev
 ```
 
-🔐 Security Notes
+This will, via Turborepo:
 
-    API keys are stored encrypted in keys.db using AES-256-CTR.
+* start admin-api (NestJS, watch mode),
+* start proxy (NestJS, watch mode),
+* start core in watch mode (tsc -w),
+* start frontend (Vite dev server).
 
-    The proxy strips X-OpenWebUI-* headers before making upstream calls.
+Perfect for working on the whole system at once.
 
-    Runs as non-root inside container.
+2. Run a single app
 
-    You should terminate TLS externally (Caddy, Traefik, Nginx, etc.)
+You can also start only one part of the monorepo using --filter.
 
-🎯 Roadmap
+Admin API
+```bash
+pnpm run dev --filter "@nanogpt-monorepo/admin-api"
+```
 
-Optional JWT-based auth to block unknown users
+Proxy API
+```bash
+pnpm run dev --filter "@nanogpt-monorepo/proxy"
+```
 
-Web-based admin UI for managing users
+Frontend
+```bash
+pnpm run dev --filter "@nanogpt-monorepo/frontend"
+```
 
-Docker health checks
+# 🧪 Useful Scripts (root)
 
-    Built-in rate limiting per user
+At the monorepo root:
 
-📄 License
+```bash
+# Run all dev servers (admin-api, proxy, core, frontend)
+pnpm dev
+```
+
+```bash
+# Build all apps/packages
+pnpm build
+```
+
+```bash
+# Lint all projects (via Turborepo)
+pnpm lint
+```
+
+```bash
+# Auto-format all projects (where configured)
+pnpm format
+```
+
+```bash
+# Run tests for all projects (when tests are added)
+pnpm test
+```
+
+Each app/package also exposes its own scripts (e.g. build, lint, format, test)
+that you can run via pnpm --filter <name> <script>.
+
+# 👩‍💻👨‍💻 Developers
+
+| Name                     | Role                |
+|--------------------------|---------------------|
+| symphony-navigator       | Developer           |
+| diaphainein              | Developer           |          
+| patrickbelanger          | Developer           |   
+| lauriebeaulieu981 👠👠   | patrickbelanger' AI | 
+
+✨ Yes, the AI is listed — she did help design and debug this monorepo. 😉
+
+# 📄 License
 
 MIT – use it, break it, improve it. Contributions welcome!
