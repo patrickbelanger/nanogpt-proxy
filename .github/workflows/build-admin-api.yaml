@@ -1,0 +1,50 @@
+name: Admin API – Build & Test
+
+on:
+  push:
+    paths:
+      - 'apps/admin-api/**'
+      - 'packages/core/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'apps/admin-api/**'
+      - 'packages/core/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - 'package.json'
+
+jobs:
+  admin-api-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies (monorepo)
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint admin-api
+        run: pnpm lint --filter "@nanogpt-monorepo/admin-api"
+
+      - name: Build admin-api
+        run: pnpm build --filter "@nanogpt-monorepo/admin-api"
+
+      - name: Test admin-api
+        run: pnpm test --filter "@nanogpt-monorepo/admin-api"
