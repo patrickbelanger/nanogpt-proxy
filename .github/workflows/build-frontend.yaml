@@ -1,25 +1,23 @@
-name: Admin API – Build, Lint & Test
+name: Frontend – Build, Lint & Test
 
 on:
   push:
     paths:
-      - 'apps/admin-api/**'
-      - 'packages/core/**'
+      - 'apps/frontend/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'turbo.json'
       - 'package.json'
   pull_request:
     paths:
-      - 'apps/admin-api/**'
-      - 'packages/core/**'
+      - 'apps/frontend/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'turbo.json'
       - 'package.json'
 
 jobs:
-  admin-api-ci:
+  frontend-ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +26,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -38,19 +38,13 @@ jobs:
       - name: Install dependencies (monorepo)
         run: pnpm install --frozen-lockfile
 
-      - name: Lint admin-api
-        run: pnpm lint --filter "@nanogpt-monorepo/admin-api"
+      - name: Lint frontend
+        run: pnpm lint --filter "@nanogpt-monorepo/frontend"
 
-      - name: Build admin-api
-        run: pnpm build --filter "@nanogpt-monorepo/admin-api"
+      - name: Build frontend
+        run: pnpm build --filter "@nanogpt-monorepo/frontend"
 
-      - name: Test admin-api
-        run: pnpm test --filter "@nanogpt-monorepo/admin-api"
-
-      - name: Upload Coverage Report (admin-api)
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-proxy
-          path: apps/proxy/coverage
+      # To enable (Vitest)
+      # - name: Test frontend
+      #   run: pnpm test --filter "@nanogpt-monorepo/frontend"
 

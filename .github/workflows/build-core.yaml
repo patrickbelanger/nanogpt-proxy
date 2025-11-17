@@ -1,9 +1,8 @@
-name: Admin API – Build, Lint & Test
+name: Core – Build, Lint & Test
 
 on:
   push:
     paths:
-      - 'apps/admin-api/**'
       - 'packages/core/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
@@ -11,7 +10,6 @@ on:
       - 'package.json'
   pull_request:
     paths:
-      - 'apps/admin-api/**'
       - 'packages/core/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
@@ -19,7 +17,7 @@ on:
       - 'package.json'
 
 jobs:
-  admin-api-ci:
+  core-ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,19 +36,12 @@ jobs:
       - name: Install dependencies (monorepo)
         run: pnpm install --frozen-lockfile
 
-      - name: Lint admin-api
-        run: pnpm lint --filter "@nanogpt-monorepo/admin-api"
+      - name: Lint core
+        run: pnpm lint --filter "@nanogpt-monorepo/core"
 
-      - name: Build admin-api
-        run: pnpm build --filter "@nanogpt-monorepo/admin-api"
+      - name: Build core
+        run: pnpm build --filter "@nanogpt-monorepo/core"
 
-      - name: Test admin-api
-        run: pnpm test --filter "@nanogpt-monorepo/admin-api"
-
-      - name: Upload Coverage Report (admin-api)
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-proxy
-          path: apps/proxy/coverage
-
+      # To enable
+      # - name: Test core
+      #   run: pnpm test --filter "@nanogpt-monorepo/core"
