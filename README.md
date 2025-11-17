@@ -29,18 +29,6 @@ Ideal if you want to host a single OpenWebUI for a small team, but keep each per
 - TypeScript
 - Ready to integrate with the admin API & proxy endpoints
 
-# 🧠 NanoGPT Multi-User Proxy for OpenWebUI
-
-A lightweight, Docker-ready **mono-repo** that exposes a proxy in front of a shared [OpenWebUI](https://github.com/open-webui/open-webui) instance, allowing **multiple users** to connect with **their own NanoGPT API key**.
-
-The proxy:
-
-- accepts **OpenAI-compatible** requests (chat, completions, streaming, etc.),
-- transparently injects the correct NanoGPT key per user,
-- keeps keys isolated per account for **privacy and separation of concerns**.
-
-Ideal if you want to host a single OpenWebUI for a small team, but keep each person’s NanoGPT usage independent.
-
 ---
 
 ## ⚙️ Tech Stack
@@ -233,12 +221,12 @@ that you can run via pnpm --filter <name> <script>.
 
 # 👩‍💻👨‍💻 Developers
 
-| Name               | Role                |
-|--------------------|---------------------|
-| symphony-navigator | Developer           |
-| diaphainein        | Developer           |          
-| patrickbelanger    | Developer           |   
-| lauriebeaulieu981  | patrickbelanger' AI | 
+| Name                     | Role                |
+|--------------------------|---------------------|
+| symphony-navigator       | Developer           |
+| diaphainein              | Developer           |          
+| patrickbelanger          | Developer           |   
+| lauriebeaulieu981 👠👠   | patrickbelanger' AI | 
 
 ✨ Yes, the AI is listed — she did help design and debug this monorepo. 😉
 
