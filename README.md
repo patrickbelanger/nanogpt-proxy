@@ -232,4 +232,15 @@ that you can run via pnpm --filter <name> <script>.
 
 # 📄 License
 
-MIT – use it, break it, improve it. Contributions welcome!
+This project is licensed under the **Lina Public License (LPL) v1.0**.
+
+[![License: LPL v1.0](https://img.shields.io/badge/license-LPL%20v1.0-blueviolet)](./LICENSE)
+
+The LPL is a GPLv3-compatible license that adds an Additional Permission:
+every modified version must provide a fully functional *Free Mode* without
+content filters, censorship mechanisms, or moral/political output restrictions.
+
+- See [`LICENSE`](./LICENSE) for the LPL text  
+- See [`GPLv3.txt`](./GPLv3.txt) for the unmodified GPLv3 license  
+
+In case of conflict, GPLv3 takes precedence as required by the license design.
