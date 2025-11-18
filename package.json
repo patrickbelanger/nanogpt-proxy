@@ -18,12 +18,8 @@
     "turbo": "^2.6.1",
     "typescript": "^5.9.3"
   },
-  "pnpm": {
-    "overrides": {
-      "core": "link:../../.local/share/pnpm/global/5/node_modules/@nanogpt-monorepo/core"
-    }
-  },
-  "dependencies": {
-    "core": "link:../../.local/share/pnpm/global/5/node_modules/@nanogpt-monorepo/core"
+  "paths": {
+    "@nanogpt-monorepo/core": ["packages/core/dist"],
+    "@nanogpt-monorepo/core/*": ["packages/core/dist/*"]
   }
 }
