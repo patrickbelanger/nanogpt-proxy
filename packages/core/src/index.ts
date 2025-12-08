@@ -1,3 +1,7 @@
+// 🔐 JWT
+export type { JwtAccessTokenPayload } from './types/jwt-access-token.payload';
+export type { JwtRefreshTokenPayload } from './types/jwt-refresh-token.payload';
+
 // 🌱 Environment
 export { EnvironmentModule } from './environment/environment.module';
 export { EnvironmentService } from './environment/environment.service';
