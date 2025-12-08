@@ -9,11 +9,11 @@ COPY packages ./packages
 
 RUN corepack enable && pnpm install --frozen-lockfile
 RUN pnpm --filter "@nanogpt-monorepo/core" build
-RUN pnpm --filter proxy build
+RUN pnpm --filter admin-api build
 
-WORKDIR /app/apps/proxy
+WORKDIR /app/apps/admin-api
 
 ENV NODE_ENV=production
 
-EXPOSE 3000
+EXPOSE 3001
 CMD ["node", "dist/main.js"]
