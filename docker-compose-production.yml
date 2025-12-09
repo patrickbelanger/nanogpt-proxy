@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: nanogpt-redis
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    environment:
+      - DB_ENCRYPTION_KEY=${DB_ENCRYPTION_KEY}
+    restart: unless-stopped
+
+  admin-api:
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-admin-api:${IMAGE_TAG:-latest}
+    container_name: nanogpt-admin-api
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3001:3001"
+
+  proxy:
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-proxy:${IMAGE_TAG:-latest}
+    container_name: nanogpt-proxy
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+
+  frontend:
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-frontend:${IMAGE_TAG:-latest}
+    container_name: nanogpt-frontend
+    depends_on:
+      - admin-api
+      - proxy
+    ports:
+      - "5173:80"
+
+volumes:
+  redis-data:

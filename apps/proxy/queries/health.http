@@ -1,0 +1,5 @@
+### GET health check
+GET http://localhost:{{port}}/health
+Authorization: Bearer invalid
+
+###

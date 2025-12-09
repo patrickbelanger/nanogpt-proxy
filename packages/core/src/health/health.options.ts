@@ -1,0 +1,5 @@
+export interface HealthModuleOptions {
+  serviceName: string;
+}
+
+export const HEALTH_MODULE_OPTIONS = 'HEALTH_MODULE_OPTIONS';

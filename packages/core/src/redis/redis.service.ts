@@ -14,7 +14,7 @@ export class RedisService implements OnModuleDestroy {
       console.error('[Redis ERROR]', err);
     });
 
-    this.client.connect();
+    void this.client.connect();
   }
 
   async onModuleDestroy() {

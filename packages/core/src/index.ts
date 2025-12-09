@@ -16,3 +16,6 @@ export { RedisService } from './redis/redis.service';
 
 // 👤 User
 export { UserRepository } from './user/user.repository';
+
+// 👩‍⚕️ Health
+export { HealthModule } from './health/health.module';
