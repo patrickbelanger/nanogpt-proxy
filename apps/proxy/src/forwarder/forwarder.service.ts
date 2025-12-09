@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import { Readable } from 'node:stream';
@@ -11,6 +11,7 @@ export class ForwarderService {
   private readonly API_BASE = 'https://nano-gpt.com/api' as const;
   private readonly SUBSCRIPTION_API = `${this.API_BASE}/subscription/v1` as const;
   private readonly REGULAR_API = `${this.API_BASE}/v1` as const;
+  private readonly logger = new Logger(ForwarderService.name);
 
   constructor(
     private readonly env: EnvironmentService,
@@ -24,7 +25,7 @@ export class ForwarderService {
   ): Promise<void> {
     const userEmail = req.headers['x-openwebui-user-email'] as string | undefined;
 
-    console.log(`[${req.method}] ${req.path} for ${userEmail || 'unknown user'}`);
+    this.logger.log(`[${req.method}] ${req.path} for ${userEmail || 'unknown user'}`);
 
     if (req.path === '/v1/models') {
       await this.forwardModels(res);
@@ -60,11 +61,11 @@ export class ForwarderService {
         const status = axiosErr.response?.status ?? HttpStatus.BAD_GATEWAY;
         const data = axiosErr.response?.data ?? { message: 'Error fetching models from upstream' };
 
-        console.error('Error fetching models:', data);
+        this.logger.error('Error fetching models:', data);
         throw new HttpException(data as Record<string, unknown>, status);
       }
 
-      console.error('Unknown error fetching models:', error);
+      this.logger.error('Unknown error fetching models:', error);
       throw new HttpException({ error: 'Unknown upstream error' }, HttpStatus.BAD_GATEWAY);
     }
   }

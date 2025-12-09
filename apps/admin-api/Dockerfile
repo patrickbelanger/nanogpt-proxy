@@ -1,6 +1,8 @@
-FROM node:22-alpine
+FROM node:22.21.1-alpine3.23
 
 WORKDIR /app
+
+RUN apk add --no-cache curl
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 

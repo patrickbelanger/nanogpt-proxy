@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   admin-api:
-    image: nanogpt-admin-api
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-admin-api:${IMAGE_TAG:-latest}
     container_name: nanogpt-admin-api
     depends_on:
       - redis
@@ -23,16 +23,9 @@ services:
       REDIS_URL: redis://redis:6379
     ports:
       - "3001:3001"
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:3001/health || exit 1" ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
   proxy:
-    image: nanogpt-proxy
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-proxy:${IMAGE_TAG:-latest}
     container_name: nanogpt-proxy
     depends_on:
       - redis
@@ -40,15 +33,9 @@ services:
       REDIS_URL: redis://redis:6379
     ports:
       - "3000:3000"
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:3000/health || exit 1" ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
   frontend:
-    image: nanogpt-frontend
+    image: ghcr.io/${GHCR_OWNER}/nanogpt-frontend:${IMAGE_TAG:-latest}
     container_name: nanogpt-frontend
     depends_on:
       - admin-api
