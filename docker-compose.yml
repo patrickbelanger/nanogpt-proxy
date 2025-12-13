@@ -15,11 +15,15 @@ services:
     restart: unless-stopped
 
   admin-api:
+    build:
+      context: .
+      dockerfile: apps/admin-api/Dockerfile
     image: nanogpt-admin-api
     container_name: nanogpt-admin-api
     depends_on:
       - redis
     environment:
+      CORS_ORIGINS: http://localhost,http://localhost:5173
       REDIS_URL: redis://redis:6379
     ports:
       - "3001:3001"
@@ -32,6 +36,9 @@ services:
       start_period: 10s
 
   proxy:
+    build:
+      context: .
+      dockerfile: apps/proxy/Dockerfile
     image: nanogpt-proxy
     container_name: nanogpt-proxy
     depends_on:
@@ -48,13 +55,16 @@ services:
       start_period: 10s
 
   frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
     image: nanogpt-frontend
     container_name: nanogpt-frontend
     depends_on:
       - admin-api
       - proxy
     ports:
-      - "5173:80"
+      - "80:80"
 
 volumes:
   redis-data:
