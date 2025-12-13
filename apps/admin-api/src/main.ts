@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { EnvironmentService } from '@nanogpt-monorepo/core';
+import { Logger } from '@nestjs/common';
 
 export async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('CORS');
 
+  const app = await NestFactory.create(AppModule);
   const fallbackOrigins = ['http://localhost:5173'];
   const corsOrigins = (process.env.CORS_ORIGINS ?? '')
     .split(',')
@@ -22,7 +24,12 @@ export async function bootstrap(): Promise<void> {
         return callback(null, true);
       }
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+      logger.log(`Allowed origins: ${allowedOrigins.join(', ')}`);
+
+      if (!allowedOrigins.includes(origin)) {
+        logger.warn(`BLOCKED origin="${origin}" allowed="${allowedOrigins.join(', ')}"`);
+        return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+      }
     },
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
