@@ -21,7 +21,10 @@
     }
   },
   "login": {
-    "title": "Welcome back!"
+    "title": "Welcome back!",
+    "forgotPassword": "Forgot Password",
+    "register": "Sign Up",
+    "registrationPendingReviewHint" : "Your account registration may be under review, or subject to further verification."
   },
   "footer": {
     "authors": "NanoGPT Proxy Contributors ",

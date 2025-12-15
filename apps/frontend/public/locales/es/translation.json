@@ -21,7 +21,10 @@
     }
   },
   "login": {
-    "title": "¡Bienvenido de nuevo!"
+    "title": "¡Bienvenido de nuevo!",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "register": "Crear cuenta",
+    "registrationPendingReviewHint": "El registro de tu cuenta puede estar en revisión o sujeto a verificaciones adicionales."
   },
   "footer": {
     "authors": "Colaboradores de NanoGPT Proxy",

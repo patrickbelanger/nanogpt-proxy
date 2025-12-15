@@ -21,7 +21,10 @@
     }
   },
   "login": {
-    "title": "Willkommen zurück!"
+    "title": "Willkommen zurück!",
+    "forgotPassword": "Passwort vergessen",
+    "register": "Konto erstellen",
+    "registrationPendingReviewHint": "Die Registrierung Ihres Kontos kann derzeit geprüft werden oder zusätzlichen Überprüfungen unterliegen."
   },
   "footer": {
     "authors": "NanoGPT Proxy-Mitwirkende",
