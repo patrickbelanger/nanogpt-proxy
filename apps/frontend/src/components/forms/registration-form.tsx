@@ -151,7 +151,7 @@ function RegistrationForm() {
 
           {active < 2 && (
             <Button onClick={handleNext} loading={isPending}>
-              {active === 1 ? t('button.createAccount.label') : t('button.back.label')}
+              {active === 1 ? t('button.createAccount.label') : t('button.next.label')}
             </Button>
           )}
         </Box>

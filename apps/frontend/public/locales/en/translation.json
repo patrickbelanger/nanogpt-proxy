@@ -36,7 +36,7 @@
     "registrationPendingReviewHint" : "Your account registration may be under review, or subject to further verification."
   },
   "footer": {
-    "authors": "NanoGPT Proxy Contributors ",
+    "authors": "NanoGPT Proxy Contributors",
     "allRightsReserved": "All rights reserved.",
     "disclaimer": "Disclaimer: NanoGPT Proxy is an independent project and is not affiliated with, associated with, endorsed by, or sponsored by NanoGPT. All trademarks and product names are the property of their respective owners.",
     "license": "This project is licensed under the Lina Public License (LPL) v1.0."
