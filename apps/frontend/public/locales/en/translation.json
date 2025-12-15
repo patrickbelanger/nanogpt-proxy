@@ -1,7 +1,16 @@
 {
   "button": {
+    "back": {
+      "label": "Back"
+    },
+    "createAccount": {
+      "label": "Create account"
+    },
     "login": {
       "label": "Login"
+    },
+    "next": {
+      "label": "Next"
     }
   },
   "input": {
@@ -31,5 +40,21 @@
     "allRightsReserved": "All rights reserved.",
     "disclaimer": "Disclaimer: NanoGPT Proxy is an independent project and is not affiliated with, associated with, endorsed by, or sponsored by NanoGPT. All trademarks and product names are the property of their respective owners.",
     "license": "This project is licensed under the Lina Public License (LPL) v1.0."
+  },
+  "register": {
+    "status": {
+      "creating": "Creating your account..."
+    },
+    "steps": {
+      "email": {
+        "label": "Email",
+        "description": "Enter your email address"
+      },
+      "password": {
+        "label": "Password",
+        "description": "Choose a secure password"
+      }
+    },
+    "title": "Create your account"
   }
 }
