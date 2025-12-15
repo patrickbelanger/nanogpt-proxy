@@ -1,11 +1,11 @@
 export interface ConfigurationTypes {
-  enableForgetPassword: boolean;
-  enableRegistration: boolean;
-  enableReviewPendingRegistration: boolean;
+  forgetPassword: boolean;
+  registration: boolean;
+  reviewPendingRegistration: boolean;
 }
 
 export const DEFAULT_NANOGPT_CONFIG: ConfigurationTypes = {
-  enableForgetPassword: false,
-  enableRegistration: true,
-  enableReviewPendingRegistration: true,
+  forgetPassword: false,
+  registration: true,
+  reviewPendingRegistration: true,
 };

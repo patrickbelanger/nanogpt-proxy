@@ -1,10 +1,19 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { EnvironmentService, UserRepository } from '@nanogpt-monorepo/core';
 import { SecurityService } from '../security/security.service';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
 import { LoginDto } from '../dtos/login.dto';
 import { TokenService } from '../security/token.service';
 import jwt from 'jsonwebtoken';
+import { ConfigurationTypes } from '../configuration/configuration.types';
+import { UsersService } from '../users/users.service';
+import { RegisterUserDto } from '../dtos/register-user.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +21,7 @@ export class AuthService {
 
   constructor(
     private readonly users: UserRepository,
+    private readonly usersService: UsersService,
     private readonly security: SecurityService,
     private readonly tokens: TokenService,
     private readonly env: EnvironmentService,
@@ -81,6 +91,39 @@ export class AuthService {
     }
 
     return await this.tokens.rotateTokens(user);
+  }
+
+  async register(dto: RegisterUserDto, configurationTypes: ConfigurationTypes) {
+    const enabled = !configurationTypes.reviewPendingRegistration;
+
+    const createDto: CreateUserDto = {
+      email: dto.email,
+      password: dto.password,
+      api_key: '',
+    };
+
+    await this.usersService.createUser(createDto, { enabled, role: 'USER' });
+    const user = await this.users.getUser(dto.email);
+
+    if (!user) {
+      throw new InternalServerErrorException('User creation failed');
+    }
+
+    if (enabled) {
+      const { accessToken, refreshToken } = await this.tokens.rotateTokens(user);
+      return {
+        email: user.email,
+        role: user.role,
+        accessToken,
+        refreshToken,
+      };
+    }
+
+    return {
+      email: user.email,
+      role: user.role,
+      pendingReview: true,
+    };
   }
 
   async logout(accessToken: string) {

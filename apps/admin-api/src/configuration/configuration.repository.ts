@@ -25,9 +25,9 @@ export class ConfigurationRepository {
 
   private toHash(config: ConfigurationTypes): Record<string, string> {
     return {
-      enableForgetPassword: String(config.enableForgetPassword),
-      enableRegistration: String(config.enableRegistration),
-      enableReviewPendingRegistration: String(config.enableReviewPendingRegistration),
+      enableForgetPassword: String(config.forgetPassword),
+      enableRegistration: String(config.registration),
+      enableReviewPendingRegistration: String(config.reviewPendingRegistration),
     };
   }
 
@@ -37,17 +37,14 @@ export class ConfigurationRepository {
     }
 
     return {
-      enableForgetPassword: this.parseBoolean(
+      forgetPassword: this.parseBoolean(
         data.enableForgetPassword,
-        DEFAULT_NANOGPT_CONFIG.enableForgetPassword,
+        DEFAULT_NANOGPT_CONFIG.forgetPassword,
       ),
-      enableRegistration: this.parseBoolean(
-        data.enableRegistration,
-        DEFAULT_NANOGPT_CONFIG.enableRegistration,
-      ),
-      enableReviewPendingRegistration: this.parseBoolean(
+      registration: this.parseBoolean(data.enableRegistration, DEFAULT_NANOGPT_CONFIG.registration),
+      reviewPendingRegistration: this.parseBoolean(
         data.enableReviewPendingRegistration,
-        DEFAULT_NANOGPT_CONFIG.enableReviewPendingRegistration,
+        DEFAULT_NANOGPT_CONFIG.reviewPendingRegistration,
       ),
     };
   }

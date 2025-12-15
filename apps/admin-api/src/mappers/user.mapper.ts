@@ -8,10 +8,11 @@ export function toNewUserEntity(
     passwordHash: string;
     apiKeyEncrypted: string;
     defaultRole?: string;
+    enabled?: boolean;
   },
 ): UserEntity {
   return {
-    enabled: true,
+    enabled: deps.enabled ?? true,
     email: dto.email.trim().toLowerCase(),
     password: deps.passwordHash,
     api_key: deps.apiKeyEncrypted,
