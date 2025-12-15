@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 
 ### POST refresh token
-POST http://localhost:3000/v1/auth/refresh
+POST http://localhost:{{port}}/v1/auth/refresh
 x-refresh-token: {{refreshToken}}
 
 > {%
@@ -34,7 +34,7 @@ x-refresh-token: {{refreshToken}}
 ###
 
 ### POST logout
-POST http://localhost:3000/v1/auth/logout
+POST http://localhost:{{port}}/v1/auth/logout
 Authorization: Bearer {{token}}
 
 ###

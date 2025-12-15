@@ -12,6 +12,12 @@ Content-Type: application/json
 %}
 ###
 
+### GET users (secured)
+GET http://localhost:{{port}}/v1/users
+Authorization: Bearer {{token}}
+
+###
+
 ### POST users (already exists)
 POST http://localhost:{{port}}/v1/users
 Content-Type: application/json
@@ -81,12 +87,6 @@ Authorization: Bearer {{token}}
   "password": "so-secure!",
   "role": "USER"
 }
-###
-
-### GET users (secured)
-GET http://localhost:{{port}}/v1/users
-Authorization: Bearer {{token}}
-
 ###
 
 ### GET users (should block)
