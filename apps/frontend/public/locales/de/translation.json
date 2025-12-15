@@ -1,0 +1,32 @@
+{
+  "button": {
+    "login": {
+      "label": "Anmelden"
+    }
+  },
+  "input": {
+    "email": {
+      "label": "E-Mail",
+      "placeholder": "user@domain.net",
+      "errors": {
+        "format": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+      }
+    },
+    "password": {
+      "label": "Passwort",
+      "placeholder": "Passwort",
+      "errors": {
+        "min": "Das Passwort muss mindestens 6 Zeichen lang sein."
+      }
+    }
+  },
+  "login": {
+    "title": "Willkommen zurück!"
+  },
+  "footer": {
+    "authors": "NanoGPT Proxy-Mitwirkende",
+    "allRightsReserved": "Alle Rechte vorbehalten.",
+    "disclaimer": "Hinweis: NanoGPT Proxy ist ein unabhängiges Projekt und steht in keiner Verbindung zu NanoGPT. Es ist weder affiliiert, noch assoziiert, noch von NanoGPT genehmigt oder gesponsert. Alle Marken und Produktnamen sind Eigentum ihrer jeweiligen Inhaber.",
+    "license": "Dieses Projekt steht unter der Lina Public License (LPL) Version 1.0."
+  }
+}

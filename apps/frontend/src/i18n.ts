@@ -10,7 +10,7 @@ void i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    supportedLngs: ['en', 'fr'],
+    supportedLngs: ['en', 'fr', 'es', 'de'],
     debug: true,
     detection: {
       order: ['querystring', 'navigator'],
