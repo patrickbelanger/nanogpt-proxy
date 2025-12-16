@@ -5,7 +5,7 @@ import Navbar from '../navigation/nav-bar.tsx';
 
 function AdminLayout() {
   return (
-    <AppShell padding="md" header={{ height: 60 }}>
+    <AppShell padding="md" header={{ height: 60 }} navbar={{ width: 260, breakpoint: 'xs' }}>
       <AppShell.Header>
         <TopHeader />
       </AppShell.Header>
@@ -13,7 +13,7 @@ function AdminLayout() {
         <Navbar />
       </AppShell.Navbar>
       <AppShell.Main>
-        <Container size="sm">
+        <Container size="lg" px="md">
           <Outlet />
         </Container>
       </AppShell.Main>

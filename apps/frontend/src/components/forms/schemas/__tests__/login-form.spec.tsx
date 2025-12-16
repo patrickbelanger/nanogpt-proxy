@@ -1,9 +1,9 @@
-import i18nTest from '../../../i18ntest.ts';
+import i18nTest from '../../../../i18ntest.ts';
 import { describe, it, expect, beforeEach, vi, type MockedFunction } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import LoginForm from '../login-form.tsx';
-import { useLogin } from '../../../hooks/useLogin.ts';
-import { renderWithProviders } from '../../../__tests__/utilities/test.utilities.tsx';
+import LoginForm from '../../login-form.tsx';
+import { useLogin } from '../../../../hooks/useLogin.ts';
+import { renderWithProviders } from '../../../../__tests__/utilities/test.utilities.tsx';
 
 vi.mock('../../../hooks/useLogin.ts');
 

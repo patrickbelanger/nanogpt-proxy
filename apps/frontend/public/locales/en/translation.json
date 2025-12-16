@@ -83,5 +83,22 @@
       }
     },
     "title": "Create your account"
+  },
+  "settings": {
+    "forgetPassword": {
+      "label": "Forgot password",
+      "description": "Allow users to request a password reset from the login screen."
+    },
+    "registration": {
+      "label": "User registration",
+      "description": "Allow new users to create an account from the login screen."
+    },
+    "reviewPendingRegistration": {
+      "label": "Review registrations",
+      "description": "New accounts require manual approval before they can sign in."
+    },
+    "errors": {
+      "load": "Unable to load configuration."
+    }
   }
 }

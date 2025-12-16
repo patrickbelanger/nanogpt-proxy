@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../apis/api.ts';
 import type { ConfigurationDto } from '../dtos/configuration.dto.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAccessToken } from '../utilities/cookies.utilities.ts';
 
 async function fetchConfiguration(): Promise<ConfigurationDto> {
   const { data } = await axios.get<ConfigurationDto>(`${API_BASE_URL}/v1/configuration`, {
@@ -11,10 +12,16 @@ async function fetchConfiguration(): Promise<ConfigurationDto> {
 }
 
 async function updateConfiguration(payload: Partial<ConfigurationDto>): Promise<ConfigurationDto> {
+  const accessToken = getAccessToken();
+  if (!accessToken) {
+    throw new Error('No access token available. Please sign in again.');
+  }
+
   const { data } = await axios.put<ConfigurationDto>(`${API_BASE_URL}/v1/configuration`, payload, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return data;
