@@ -21,7 +21,6 @@ vi.mock('../../utilities/cookies.utilities', () => ({
   setAuthCookies: vi.fn(),
 }));
 
-// On mock l’utilitaire JWT
 vi.mock('../../utilities/jwt.utilities', () => ({
   isJwtExpired: vi.fn(),
 }));

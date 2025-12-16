@@ -23,9 +23,7 @@ export const AuthContext = createContext<AuthContextValue | undefined>(undefined
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => {
     const accessToken = getAccessToken();
-    if (!accessToken || isJwtExpired(accessToken)) {
-      return null;
-    }
+    if (!accessToken || isJwtExpired(accessToken)) return null;
     return userFromAccessToken(accessToken);
   });
 
@@ -39,9 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const setSession = useCallback(
     ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
       setAuthCookies({ accessToken, refreshToken });
-
-      const nextUser = userFromAccessToken(accessToken);
-      setUser(nextUser);
+      setUser(userFromAccessToken(accessToken));
     },
     [],
   );
@@ -54,19 +50,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const { data } = await axios.post<{
-        accessToken: string;
-        refreshToken: string;
-      }>(`${API_BASE_URL}/v1/auth/refresh/`, null, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
+      const { data } = await axios.post<{ accessToken: string; refreshToken: string }>(
+        `${API_BASE_URL}/v1/auth/refresh/`,
+        null,
+        {
+          withCredentials: true,
+          headers: {
+            'x-refresh-token': refreshToken,
+          },
         },
-      });
+      );
 
       setSession({ accessToken: data.accessToken, refreshToken: data.refreshToken });
       return userFromAccessToken(data.accessToken);
-    } catch (e) {
+    } catch {
       clearSession();
       return null;
     }
@@ -82,8 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (!isJwtExpired(accessToken)) {
-        const existingUser = userFromAccessToken(accessToken);
-        setUser(existingUser);
+        setUser(userFromAccessToken(accessToken));
         setIsLoading(false);
         return;
       }

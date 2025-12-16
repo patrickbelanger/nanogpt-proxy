@@ -5,7 +5,12 @@ import { useLogout } from '../../../hooks/useLogout.ts';
 import { useNavigate } from 'react-router';
 import { renderWithProviders } from '../../../__tests__/utilities/test.utilities.tsx';
 import NavBar from '../nav-bar.tsx';
+import i18nTest from '../../../i18ntest.ts';
+import { useAuth } from '../../../hooks/useAuth.ts';
 
+vi.mock('../../../hooks/useAuth.ts', () => ({
+  useAuth: vi.fn(),
+}));
 vi.mock('../../../hooks/useLogout.ts');
 vi.mock('react-router', async () => {
   const actual = await vi.importActual<typeof import('react-router')>('react-router');
@@ -15,13 +20,16 @@ vi.mock('react-router', async () => {
   };
 });
 
+const mockedUseAuth = useAuth as unknown as MockedFunction<typeof useAuth>;
 const mockedUseLogout = useLogout as unknown as MockedFunction<typeof useLogout>;
 const mockedUseNavigate = useNavigate as unknown as MockedFunction<typeof useNavigate>;
 
 type UseLogoutResult = ReturnType<typeof useLogout>;
 
 describe('<NavBar />', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18nTest.changeLanguage('en');
+
     vi.clearAllMocks();
 
     const navigateMock = vi.fn();
@@ -32,6 +40,16 @@ describe('<NavBar />', () => {
       isPending: false,
       error: null,
     } as Partial<UseLogoutResult> as UseLogoutResult);
+
+    mockedUseAuth.mockReturnValue({
+      user: {
+        email: 'admin@example.com',
+        roles: 'ADMIN',
+      },
+      isLoading: false,
+      setSession: vi.fn(),
+      clearSession: vi.fn(),
+    });
   });
 
   it('renders version and navigation links', () => {
@@ -42,7 +60,7 @@ describe('<NavBar />', () => {
     expect(screen.getByText('v0.0.1')).toBeInTheDocument();
     expect(screen.getByText('Administer')).toBeInTheDocument();
     expect(screen.getByText('API Keys')).toBeInTheDocument();
-    expect(screen.getByText('Logout')).toBeInTheDocument();
+    expect(screen.getByText('Log out')).toBeInTheDocument();
   });
 
   it('navigates when clicking a nav link and sets it active', () => {
@@ -65,7 +83,7 @@ describe('<NavBar />', () => {
     expect(apiKeysLink).toHaveAttribute('data-active');
   });
 
-  it('calls logout mutation when clicking Logout', () => {
+  it('calls logout mutation when clicking Log out', () => {
     /* Arrange */
     const navigateMock = vi.fn();
     mockedUseNavigate.mockReturnValue(navigateMock);
@@ -81,7 +99,7 @@ describe('<NavBar />', () => {
     /* Act */
     renderWithProviders(<NavBar />);
 
-    const logoutLink = screen.getByText('Logout').closest('a')!;
+    const logoutLink = screen.getByText('Log out').closest('a')!;
     fireEvent.click(logoutLink);
 
     /* Assert */
