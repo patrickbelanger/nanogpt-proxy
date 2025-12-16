@@ -25,7 +25,24 @@
       "label": "Password",
       "placeholder": "Password",
       "errors": {
-        "min": "Password must be at least 6 characters"
+        "min": "Password must be at least 6 characters",
+        "uppercase": "Password must contain at least one uppercase letter",
+        "lowercase": "Password must contain at least one lowercase letter",
+        "special": "Password must contain at least one special character"
+      },
+      "rules": {
+        "length": "At least 6 characters",
+        "uppercase": "At least one uppercase letter (A–Z)",
+        "lowercase": "At least one lowercase letter (a–z)",
+        "special": "At least one special character (e.g. ! @ # $ % & *)"
+      },
+      "strength": {
+        "label": "Password strength",
+        "empty": "Not set",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong"
       }
     }
   },
@@ -33,7 +50,7 @@
     "title": "Welcome back!",
     "forgotPassword": "Forgot Password",
     "register": "Sign Up",
-    "registrationPendingReviewHint" : "Your account registration may be under review, or subject to further verification."
+    "registrationPendingReviewHint": "Your account registration may be under review, or subject to further verification."
   },
   "footer": {
     "authors": "NanoGPT Proxy Contributors",

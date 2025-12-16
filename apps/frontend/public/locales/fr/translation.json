@@ -25,7 +25,24 @@
       "label": "Mot de passe",
       "placeholder": "Mot de passe",
       "errors": {
-        "min": "Le mot de passe doit contenir au moins 6 caractères"
+        "min": "Le mot de passe doit contenir au moins 6 caractères",
+        "uppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+        "lowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+        "special": "Le mot de passe doit contenir au moins un caractère spécial"
+      },
+      "rules": {
+        "length": "Au moins 6 caractères",
+        "uppercase": "Au moins une lettre majuscule (A–Z)",
+        "lowercase": "Au moins une lettre minuscule (a–z)",
+        "special": "Au moins un caractère spécial (p. ex. ! @ # $ % & *)"
+      },
+      "strength": {
+        "label": "Solidité du mot de passe",
+        "empty": "Non défini",
+        "weak": "Faible",
+        "fair": "Moyenne",
+        "good": "Bonne",
+        "strong": "Très bonne"
       }
     }
   },

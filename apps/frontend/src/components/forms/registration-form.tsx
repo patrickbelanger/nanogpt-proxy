@@ -18,11 +18,32 @@ import { useNavigate } from 'react-router';
 import { setAuthCookies } from '../../utilities/cookies.utilities';
 import type { RegisterRequestDto } from '../../dtos/register-request.dto.ts';
 import { useRegister } from '../../hooks/useRegister.ts';
+import PasswordStrengthMeter from '../customs/password-strength-meter.tsx';
+import { validatePasswordRaw } from '../../utilities/password-validation.utilities.ts';
 
 function RegistrationForm() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
+
+  const validatePassword = (value: string) => {
+    const result = validatePasswordRaw(value);
+
+    if (result.valid) return null;
+
+    switch (result.failedRule) {
+      case 'min':
+        return t('input.password.errors.min');
+      case 'uppercase':
+        return t('input.password.errors.uppercase');
+      case 'lowercase':
+        return t('input.password.errors.lowercase');
+      case 'special':
+        return t('input.password.errors.special');
+      default:
+        return t('input.password.errors.min');
+    }
+  };
 
   const form = useForm<RegisterRequestDto>({
     initialValues: {
@@ -31,7 +52,7 @@ function RegistrationForm() {
     },
     validate: {
       email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : t('input.email.errors.format')),
-      password: (value) => (value.trim().length >= 6 ? null : t('input.password.errors.min')),
+      password: (value) => validatePassword(value),
     },
   });
 
@@ -114,6 +135,8 @@ function RegistrationForm() {
                 placeholder={t('input.password.placeholder')}
                 {...form.getInputProps('password')}
               />
+
+              <PasswordStrengthMeter password={form.values.password} />
             </Box>
           </Stepper.Step>
 

@@ -25,7 +25,24 @@
       "label": "Contraseña",
       "placeholder": "Contraseña",
       "errors": {
-        "min": "La contraseña debe tener al menos 6 caracteres"
+        "min": "La contraseña debe tener al menos 6 caracteres",
+        "uppercase": "La contraseña debe contener al menos una letra mayúscula",
+        "lowercase": "La contraseña debe contener al menos una letra minúscula",
+        "special": "La contraseña debe contener al menos un carácter especial"
+      },
+      "rules": {
+        "length": "Al menos 6 caracteres",
+        "uppercase": "Al menos una letra mayúscula (A–Z)",
+        "lowercase": "Al menos una letra minúscula (a–z)",
+        "special": "Al menos un carácter especial (p. ej. ! @ # $ % & *)"
+      },
+      "strength": {
+        "label": "Fortaleza de la contraseña",
+        "empty": "Sin definir",
+        "weak": "Débil",
+        "fair": "Aceptable",
+        "good": "Buena",
+        "strong": "Muy buena"
       }
     }
   },
