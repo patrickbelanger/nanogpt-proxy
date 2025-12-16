@@ -58,6 +58,14 @@
     "disclaimer": "Hinweis: NanoGPT Proxy ist ein unabhängiges Projekt und steht in keiner Verbindung zu NanoGPT. Es ist weder affiliiert, noch assoziiert, noch von NanoGPT genehmigt oder gesponsert. Alle Marken und Produktnamen sind Eigentum ihrer jeweiligen Inhaber.",
     "license": "Dieses Projekt steht unter der Lina Public License (LPL) Version 1.0."
   },
+  "menu": {
+    "items": {
+      "administer": "Verwalten",
+      "apiKeys": "API-Schlüssel",
+      "settings": "Einstellungen",
+      "logout": "Abmelden"
+    }
+  },
   "register": {
     "status": {
       "creating": "Ihr Konto wird erstellt...",

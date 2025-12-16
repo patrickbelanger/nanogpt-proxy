@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { IconKey, IconLogout, IconUsersPlus } from '@tabler/icons-react';
+import { IconKey, IconLogout, IconSettings, IconUsersPlus } from '@tabler/icons-react';
 import { Code, Group } from '@mantine/core';
 import classes from './nav-bar.module.scss';
 import { useNavigate } from 'react-router';
 import { clearAuthCookies } from '../../utilities/cookies.utilities.ts';
 import { useLogout } from '../../hooks/useLogout.ts';
+import { useTranslation } from 'react-i18next';
 
 const data = [
-  { link: '/admin', label: 'Administer', icon: IconUsersPlus },
-  { link: '/admin/apikey', label: 'API Keys', icon: IconKey },
+  { link: '/admin', label: 'menu.items.administer', roles: ['ADMIN'], icon: IconUsersPlus },
+  { link: '/admin/apikey', label: 'menu.items.apiKeys', roles: ['ADMIN', 'USER'], icon: IconKey },
+  { link: '/admin/settings', label: 'menu.items.settings', roles: ['ADMIN'], icon: IconSettings },
 ];
 
 function NavBar() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { mutate: logout } = useLogout({
@@ -41,7 +44,7 @@ function NavBar() {
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
+      <span>{t(item.label)}</span>
     </a>
   ));
 
@@ -59,7 +62,7 @@ function NavBar() {
       <div className={classes.footer}>
         <a href="#" className={classes.link} onClick={() => logout()}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+          <span>{t('menu.items.logout')}</span>
         </a>
       </div>
     </nav>
