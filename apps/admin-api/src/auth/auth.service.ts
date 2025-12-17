@@ -63,7 +63,7 @@ export class AuthService {
 
     const user = await this.users.getUser(dto.email);
 
-    if (!user || user.role !== 'ADMIN') {
+    if (!user || !user.enabled) {
       throw new UnauthorizedException('Invalid credentials');
     }
 

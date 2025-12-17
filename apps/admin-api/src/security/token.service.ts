@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt, { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 import { EnvironmentService, RedisService } from '@nanogpt-monorepo/core';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
 import { JwtType } from '@nanogpt-monorepo/core/dist/enums/jwt-type';
@@ -29,13 +29,21 @@ export class TokenService {
   }
 
   verifyAccessToken(token: string): JwtAccessTokenPayload {
-    const payload = jwt.verify(token, this.env.jwtSecret) as JwtAccessTokenPayload;
+    try {
+      const payload = jwt.verify(token, this.env.jwtSecret) as JwtAccessTokenPayload;
 
-    if (payload.type !== JwtType.ACCESS) {
-      throw new BadRequestException('Invalid token type');
+      if (payload.type !== JwtType.ACCESS) {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      return payload;
+    } catch (err) {
+      if (err instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Token expired');
+      }
+
+      throw err;
     }
-
-    return payload;
   }
 
   async createRefreshToken(user: UserEntity): Promise<string> {
@@ -67,7 +75,7 @@ export class TokenService {
     const stored = await this.redis.get(key);
 
     if (!stored || stored !== token) {
-      throw new BadRequestException('Refresh token revoked or not found');
+      throw new UnauthorizedException('Refresh token revoked or not found');
     }
 
     return payload;
