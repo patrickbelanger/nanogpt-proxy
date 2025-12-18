@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { EnvironmentService } from '@nanogpt-monorepo/core';
-import { AppModule } from './app.module';
 import { bootstrap } from './main';
 
 jest.mock('@nestjs/core', () => ({
@@ -9,26 +8,38 @@ jest.mock('@nestjs/core', () => ({
   },
 }));
 
+const enableCors = jest.fn();
+const listen = jest.fn();
+const get = jest.fn();
+
 describe('bootstrap', () => {
-  it('should create the app, resolve EnvironmentService and listen on proxyPort', async () => {
-    const listenMock = jest.fn();
-    const getMock = jest.fn();
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    get.mockReturnValue({
+      adminPort: 3001,
+    } as Partial<EnvironmentService>);
 
     (NestFactory.create as jest.Mock).mockResolvedValue({
-      get: getMock,
-      listen: listenMock,
-    });
+      enableCors,
+      listen,
+      get,
+    } as any);
+  });
 
-    const envServiceMock = {
-      proxyPort: 4242,
-    } as unknown as EnvironmentService;
-
-    getMock.mockReturnValue(envServiceMock);
-
+  it('should create the app, configure CORS and listen on adminPort', async () => {
+    /* Act */
     await bootstrap();
 
-    expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
-    expect(getMock).toHaveBeenCalledWith(EnvironmentService);
-    expect(listenMock).toHaveBeenCalledWith(envServiceMock.proxyPort);
+    /* Assert */
+    expect(NestFactory.create).toHaveBeenCalled();
+    expect(enableCors).toHaveBeenCalledWith(
+      expect.objectContaining({
+        credentials: true,
+        methods: expect.arrayContaining(['GET', 'HEAD', 'POST', 'DELETE']),
+        allowedHeaders: expect.arrayContaining(['Content-Type', 'Authorization']),
+      }),
+    );
+    expect(listen).toHaveBeenCalledWith(3001);
   });
 });

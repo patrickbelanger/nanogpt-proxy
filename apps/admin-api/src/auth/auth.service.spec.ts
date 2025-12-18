@@ -7,10 +7,17 @@ import { TokenService } from '../security/token.service';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
 import jwt from 'jsonwebtoken';
 import { LoginDto } from '../dtos/login.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UsersService } from '../users/users.service';
 
 const makeUserRepoMock = () => ({
   getUser: jest.fn<Promise<UserEntity | null>, [string]>(),
   saveUser: jest.fn<Promise<void>, [UserEntity]>(),
+});
+
+const makeUsersServiceMock = () => ({
+  createUser: jest.fn<Promise<void>, [CreateUserDto, { enabled: boolean; role: string }]>(),
+  // tu peux rajouter d'autres méthodes au besoin
 });
 
 const makeSecurityMock = () => ({
@@ -34,12 +41,14 @@ const makeEnvMock = () =>
 describe('AuthService', () => {
   let service: AuthService;
   let userRepo: ReturnType<typeof makeUserRepoMock>;
+  let usersService: ReturnType<typeof makeUsersServiceMock>;
   let security: ReturnType<typeof makeSecurityMock>;
   let tokens: ReturnType<typeof makeTokenMock>;
   let env: Partial<EnvironmentService>;
 
   beforeEach(async () => {
     userRepo = makeUserRepoMock();
+    usersService = makeUsersServiceMock();
     security = makeSecurityMock();
     tokens = makeTokenMock();
     env = makeEnvMock();
@@ -48,6 +57,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: UserRepository, useValue: userRepo },
+        { provide: UsersService, useValue: usersService },
         { provide: SecurityService, useValue: security },
         { provide: TokenService, useValue: tokens },
         { provide: EnvironmentService, useValue: env },

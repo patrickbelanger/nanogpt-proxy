@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EnvironmentService, RedisService } from '@nanogpt-monorepo/core';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
@@ -96,11 +96,11 @@ describe('TokenService', () => {
     await expect(service.verifyRefreshToken(badToken)).rejects.toBeInstanceOf(BadRequestException);
   });
 
-  it('verifyRefreshToken - should throw BadRequestException if token not found or mismatch in Redis', async () => {
+  it('verifyRefreshToken - should throw UnauthorizedException if token not found or mismatch in Redis', async () => {
     const token = await service.createRefreshToken(user);
     redis.get.mockResolvedValueOnce(null);
 
-    await expect(service.verifyRefreshToken(token)).rejects.toBeInstanceOf(BadRequestException);
+    await expect(service.verifyRefreshToken(token)).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('rotateTokens - should return both access and refresh tokens', async () => {

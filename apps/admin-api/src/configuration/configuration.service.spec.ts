@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigurationService } from './configuration.service';
+import { ConfigurationRepository } from './configuration.repository';
+import { RedisModule } from '@nanogpt-monorepo/core';
 
 describe('ConfigurationService', () => {
   let service: ConfigurationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ConfigurationService],
+      imports: [RedisModule],
+      providers: [ConfigurationService, ConfigurationRepository],
     }).compile();
 
     service = module.get<ConfigurationService>(ConfigurationService);
