@@ -96,6 +96,9 @@ function RegistrationForm() {
   };
 
   const handleBack = () => {
+    if (active === 0) {
+      navigate('/', { replace: true });
+    }
     setActive((current) => Math.max(0, current - 1));
   };
 
@@ -178,7 +181,7 @@ function RegistrationForm() {
         </Stepper>
 
         <Box mt="xl" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="default" onClick={handleBack} disabled={active === 0 || isPending}>
+          <Button variant="default" onClick={handleBack} disabled={isPending}>
             {t('button.back.label')}
           </Button>
 

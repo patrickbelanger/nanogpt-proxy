@@ -151,6 +151,9 @@ importers:
       '@mantine/nprogress':
         specifier: ^8.3.10
         version: 8.3.10(@mantine/core@8.3.10(@mantine/hooks@8.3.10(react@19.2.0))(@types/react@19.2.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.10(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@nanogpt-monorepo/core':
+        specifier: 'workspace: *'
+        version: link:../../packages/core
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)

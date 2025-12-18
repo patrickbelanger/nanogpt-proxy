@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EnvironmentService, RedisService } from '@nanogpt-monorepo/core';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
 import { TokenService } from './token.service';
-import { JwtType } from '@nanogpt-monorepo/core/dist/enums/jwt-type';
+import { JWT_TYPE } from '@nanogpt-monorepo/core/dist/enums/jwt-type';
 import jwt from 'jsonwebtoken';
 
 describe('TokenService', () => {
@@ -57,7 +57,7 @@ describe('TokenService', () => {
 
     expect(decoded.sub).toBe(user.email);
     expect(decoded.r).toEqual([user.role]);
-    expect(decoded.type).toBe(JwtType.ACCESS);
+    expect(decoded.type).toBe(JWT_TYPE.ACCESS);
     expect(typeof decoded.jti).toBe('string');
   });
 
@@ -67,7 +67,7 @@ describe('TokenService', () => {
 
     expect(payload).not.toBeNull();
     expect(payload?.sub).toBe(user.email);
-    expect(payload?.type).toBe(JwtType.ACCESS);
+    expect(payload?.type).toBe(JWT_TYPE.ACCESS);
   });
 
   it('createRefreshToken - should store the token in Redis with TTL', async () => {
@@ -88,11 +88,11 @@ describe('TokenService', () => {
 
     const payload = await service.verifyRefreshToken(token);
     expect(payload.sub).toBe(user.email);
-    expect(payload.type).toBe(JwtType.REFRESH);
+    expect(payload.type).toBe(JWT_TYPE.REFRESH);
   });
 
   it('verifyRefreshToken - should throw BadRequestException if type is not REFRESH', async () => {
-    const badToken = jwt.sign({ sub: user.email, type: JwtType.ACCESS }, env.jwtRefreshSecret);
+    const badToken = jwt.sign({ sub: user.email, type: JWT_TYPE.ACCESS }, env.jwtRefreshSecret);
     await expect(service.verifyRefreshToken(badToken)).rejects.toBeInstanceOf(BadRequestException);
   });
 

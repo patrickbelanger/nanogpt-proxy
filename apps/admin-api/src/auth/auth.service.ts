@@ -14,6 +14,7 @@ import { ConfigurationTypes } from '../configuration/configuration.types';
 import { UsersService } from '../users/users.service';
 import { RegisterUserDto } from '../dtos/register-user.dto';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { maskEmail } from '@nanogpt-monorepo/core/dist/utilities/masking.utils';
 
 @Injectable()
 export class AuthService {
@@ -74,6 +75,7 @@ export class AuthService {
 
     const { accessToken, refreshToken } = await this.tokens.rotateTokens(user);
 
+    this.logger.log(`Login access token for ${maskEmail(user.email)} - role: ${user.role}`);
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
@@ -90,6 +92,7 @@ export class AuthService {
       throw new UnauthorizedException('User not found or disabled');
     }
 
+    this.logger.log(`Rotate token request for: ${maskEmail(user.email)} - role: ${user.role}`);
     return await this.tokens.rotateTokens(user);
   }
 
@@ -110,6 +113,9 @@ export class AuthService {
     }
 
     if (enabled) {
+      this.logger.log(
+        `User registered: ${maskEmail(user.email)} - role: ${user.role} - pending review: false`,
+      );
       const { accessToken, refreshToken } = await this.tokens.rotateTokens(user);
       return {
         email: user.email,
@@ -119,6 +125,9 @@ export class AuthService {
       };
     }
 
+    this.logger.log(
+      `User registered: ${maskEmail(user.email)} - role: ${user.role} - pending review: true`,
+    );
     return {
       email: user.email,
       role: user.role,
