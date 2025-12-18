@@ -83,5 +83,28 @@
       }
     },
     "title": "Erstellen Sie Ihr Konto"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Anmeldung und Registrierung",
+        "description": "Verwalten Sie die Funktionen, die auf den Anmelde- und Registrierungsseiten verfügbar sind."
+      }
+    },
+    "forgetPassword": {
+      "label": "Passwort vergessen",
+      "description": "Benutzern erlauben, auf der Anmeldeseite eine Zurücksetzung des Passworts anzufordern."
+    },
+    "registration": {
+      "label": "Benutzerregistrierung",
+      "description": "Neuen Benutzern ermöglichen, auf der Anmeldeseite ein Konto zu erstellen."
+    },
+    "reviewPendingRegistration": {
+      "label": "Registrierungen prüfen",
+      "description": "Neue Konten müssen manuell genehmigt werden, bevor sie sich anmelden können."
+    },
+    "errors": {
+      "load": "Konfiguration konnte nicht geladen werden."
+    }
   }
 }

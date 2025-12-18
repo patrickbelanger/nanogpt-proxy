@@ -61,7 +61,7 @@
   "menu": {
     "items": {
       "administer": "Administrar",
-      "apiKeys": "Claves API",
+      "apiKeys": "Clave API",
       "settings": "Configuración",
       "logout": "Cerrar sesión"
     }
@@ -83,5 +83,28 @@
       }
     },
     "title": "Crea tu cuenta"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Inicio de sesión y registro",
+        "description": "Administrar las funciones disponibles en las pantallas de inicio de sesión y registro."
+      }
+    },
+    "forgetPassword": {
+      "label": "¿Olvidaste tu contraseña?",
+      "description": "Permitir que los usuarios soliciten un restablecimiento de contraseña desde la pantalla de inicio de sesión."
+    },
+    "registration": {
+      "label": "Registro de usuarios",
+      "description": "Permitir que nuevos usuarios creen una cuenta desde la pantalla de inicio de sesión."
+    },
+    "reviewPendingRegistration": {
+      "label": "Revisar registros",
+      "description": "Las nuevas cuentas requieren aprobación manual antes de poder iniciar sesión."
+    },
+    "errors": {
+      "load": "No se pudo cargar la configuración."
+    }
   }
 }

@@ -60,7 +60,7 @@
   },
   "menu": {
     "items": {
-      "administer": "Administer",
+      "administer": "Administrer",
       "apiKeys": "Clé API",
       "settings": "Paramètres",
       "logout": "Déconnexion"
@@ -83,5 +83,28 @@
       }
     },
     "title": "Créez votre compte"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Connexion et inscription",
+        "description": "Gérer les fonctionnalités disponibles sur les écrans de connexion et d'inscription."
+      }
+    },
+    "forgetPassword": {
+      "label": "Mot de passe oublié",
+      "description": "Autoriser les utilisateurs à demander une réinitialisation de mot de passe depuis l'écran de connexion."
+    },
+    "registration": {
+      "label": "Inscription des utilisateurs",
+      "description": "Permettre aux nouveaux utilisateurs de créer un compte depuis l'écran de connexion."
+    },
+    "reviewPendingRegistration": {
+      "label": "Examiner les inscriptions",
+      "description": "Les nouveaux comptes doivent être approuvés manuellement avant de pouvoir se connecter."
+    },
+    "errors": {
+      "load": "Impossible de charger la configuration."
+    }
   }
 }

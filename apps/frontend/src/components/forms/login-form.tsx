@@ -37,7 +37,7 @@ function LoginForm() {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       });
-      navigate('/admin', { replace: true });
+      navigate(data.role == 'ADMIN' ? '/admin' : '/admin/apikey', { replace: true });
     },
     onError: (err) => {
       console.error('Login failed', err);

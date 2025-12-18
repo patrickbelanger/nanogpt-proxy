@@ -61,7 +61,7 @@
   "menu": {
     "items": {
       "administer": "Administer",
-      "apiKeys": "API Keys",
+      "apiKeys": "API Key",
       "settings": "Settings",
       "logout": "Log out"
     }
@@ -85,6 +85,12 @@
     "title": "Create your account"
   },
   "settings": {
+    "groups": {
+      "login": {
+        "title": "Login and Registration",
+        "description": "Manage the features available on the login and registration screens."
+      }
+    },
     "forgetPassword": {
       "label": "Forgot password",
       "description": "Allow users to request a password reset from the login screen."

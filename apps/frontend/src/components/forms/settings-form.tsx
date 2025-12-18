@@ -20,8 +20,8 @@ type SettingsGroup = {
 const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'auth',
-    titleKey: 'settings.groups.auth.title',
-    descriptionKey: 'settings.groups.auth.description',
+    titleKey: 'settings.groups.login.title',
+    descriptionKey: 'settings.groups.login.description',
     switches: [
       {
         key: 'forgetPassword',
@@ -57,10 +57,6 @@ function SettingsForm() {
         <Title order={3}>{t('menu.items.settings')}</Title>
       </Group>
 
-      <Text size="sm" c="dimmed" mb="lg">
-        {t('settings.subtitle')}
-      </Text>
-
       {isLoading && (
         <Center mih={120}>
           <Loader size="sm" />
@@ -78,7 +74,7 @@ function SettingsForm() {
           {SETTINGS_GROUPS.map((group) => (
             <Paper key={group.id} withBorder shadow="sm" p="lg" radius="md">
               <Box mb="md">
-                <Text fw={600}>{t(group.titleKey)}</Text>
+                <Text fw={700}>{t(group.titleKey)}</Text>
                 {group.descriptionKey && (
                   <Text size="xs" c="dimmed">
                     {t(group.descriptionKey)}
