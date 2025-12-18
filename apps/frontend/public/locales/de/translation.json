@@ -62,6 +62,7 @@
     "items": {
       "administer": "Verwalten",
       "apiKey": "API-Schlüssel",
+      "profile": "Profil",
       "settings": "Einstellungen",
       "logout": "Abmelden"
     }

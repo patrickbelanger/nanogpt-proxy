@@ -62,6 +62,7 @@
     "items": {
       "administer": "Administer",
       "apiKey": "API Key",
+      "profile": "Perfil",
       "settings": "Settings",
       "logout": "Log out"
     }

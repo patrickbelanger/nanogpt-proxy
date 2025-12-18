@@ -62,6 +62,7 @@
     "items": {
       "administer": "Administrer",
       "apiKey": "Clé API",
+      "profile": "Profile",
       "settings": "Paramètres",
       "logout": "Déconnexion"
     }

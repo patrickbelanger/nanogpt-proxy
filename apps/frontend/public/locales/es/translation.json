@@ -62,6 +62,7 @@
     "items": {
       "administer": "Administrar",
       "apiKey": "Clave API",
+      "profile": "Profile",
       "settings": "Configuración",
       "logout": "Cerrar sesión"
     }

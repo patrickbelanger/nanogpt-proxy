@@ -1,24 +1,16 @@
-import axios from 'axios';
-import { createContext, useCallback, useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import type { AuthUser } from '../types/auth-user.ts';
 import {
+  clearAuthCookies,
   getAccessToken,
   getRefreshToken,
   setAuthCookies,
-  clearAuthCookies,
-} from '../utilities/cookies.utilities';
-import type { AuthUser } from '../types/auth-user';
-import { API_BASE_URL } from '../apis/api';
-import { userFromAccessToken } from '../utilities/auth-user.utilities';
-import { isJwtExpired } from '../utilities/jwt.utilities';
-
-type AuthContextValue = {
-  user: AuthUser | null;
-  isLoading: boolean;
-  setSession: (params: { accessToken: string; refreshToken: string }) => void;
-  clearSession: () => void;
-};
-
-export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+} from '../utilities/cookies.utilities.ts';
+import { isJwtExpired } from '../utilities/jwt.utilities.ts';
+import { userFromAccessToken } from '../utilities/auth-user.utilities.ts';
+import axios from 'axios';
+import { API_BASE_URL } from '../apis/api.ts';
+import { AuthContext, type AuthContextValue } from './auth.context.ts';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => {

@@ -6,6 +6,8 @@ import AdminLayout from './components/layouts/admin-layout.tsx';
 import RegistrationForm from './components/forms/registration-form.tsx';
 import SettingsForm from './components/forms/settings-form.tsx';
 import AdministerForm from './components/forms/administer-form.tsx';
+import ApiKeyForm from './components/forms/apikey-form.tsx';
+import ProfileForm from './components/forms/schemas/profile-form.tsx';
 
 function App() {
   return (
@@ -20,8 +22,8 @@ function App() {
       <Route element={<AuthGuard />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdministerForm />} />
-          <Route path="apikey" element={<>Api key</>} />
-          <Route path="profile" element={<>Profile</>} />
+          <Route path="apikey" element={<ApiKeyForm />} />
+          <Route path="profile" element={<ProfileForm />} />
           <Route path="settings" element={<SettingsForm />} />
         </Route>
       </Route>
