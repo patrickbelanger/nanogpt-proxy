@@ -5,14 +5,12 @@ import type { LogoutResponseDto } from '../../dtos/logout-response.dto';
 import { useLogout } from '../useLogout.ts';
 import { renderWithProviders } from '../../__tests__/utilities/test.utilities.tsx';
 
-// 1️⃣ Mock du client axios "api"
 vi.mock('../../apis/axios-client.ts', () => ({
   api: {
     post: vi.fn(),
   },
 }));
 
-// 2️⃣ Mock de cookies.utilities, mais en gardant les autres exports réels
 vi.mock('../../utilities/cookies.utilities', async () => {
   const actual = await vi.importActual<typeof import('../../utilities/cookies.utilities')>(
     '../../utilities/cookies.utilities',
@@ -20,15 +18,13 @@ vi.mock('../../utilities/cookies.utilities', async () => {
 
   return {
     ...actual,
-    getAccessToken: vi.fn(), // 👈 on override juste celle-là
+    getAccessToken: vi.fn(),
   };
 });
 
-// 3️⃣ On importe les mocks APRÈS les vi.mock
 import { api } from '../../apis/axios-client.ts';
 import { getAccessToken } from '../../utilities/cookies.utilities';
 
-// Helpers typés
 const mockedApi = api as unknown as {
   post: ReturnType<typeof vi.fn>;
 };
