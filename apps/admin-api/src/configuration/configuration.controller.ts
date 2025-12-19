@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
 import { ConfigurationTypes } from './configuration.types';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
@@ -7,8 +7,6 @@ import { Roles } from '../decorators/roles.decorator';
 
 @Controller('v1/configuration')
 export class ConfigurationController {
-  private readonly logger = new Logger(ConfigurationController.name);
-
   constructor(private readonly configurationService: ConfigurationService) {}
 
   @Get()
@@ -20,7 +18,6 @@ export class ConfigurationController {
   @Roles('ADMIN')
   @Put()
   async updateConfig(@Body() body: Partial<ConfigurationTypes>): Promise<ConfigurationTypes> {
-    this.logger.debug(`RAW BODY: ${JSON.stringify(body)}`);
     return this.configurationService.updateConfig(body);
   }
 }

@@ -80,7 +80,7 @@ describe('<LoginForm />', () => {
 
   it('should display alert if login failed', () => {
     /* Arrange */
-    const error = new Error('Login failed');
+    const error = new Error('Login failed. Please try again.');
 
     mockedUseLogin.mockReturnValue({
       mutate: vi.fn(),
@@ -92,6 +92,6 @@ describe('<LoginForm />', () => {
     renderWithProviders(<LoginForm />);
 
     /* Assert */
-    expect(screen.getByText('Login failed')).toBeInTheDocument();
+    expect(screen.getByText('Login failed. Please try again.')).toBeInTheDocument();
   });
 });
