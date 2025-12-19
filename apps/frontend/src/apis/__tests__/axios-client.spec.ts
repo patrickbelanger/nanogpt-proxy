@@ -57,6 +57,7 @@ beforeEach(async () => {
   }));
 });
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 describe('axios api client', () => {
   it('adds Authorization header when access token exists', () => {
     /* Arrange */

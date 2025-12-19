@@ -15,7 +15,6 @@ let currentData: any = undefined;
 let currentError: any = undefined;
 let currentOnSuccessPayload: any = undefined;
 
-// Mock react-router (uniquement useNavigate, on garde le reste réel)
 vi.mock('react-router', async () => {
   const actual = await vi.importActual<typeof import('react-router')>('react-router');
   return {
@@ -24,8 +23,6 @@ vi.mock('react-router', async () => {
   };
 });
 
-// Mock du hook useRegister – on contrôle entièrement son comportement via
-// currentIsPending / currentIsSuccess / currentData / currentError / currentOnSuccessPayload
 vi.mock('../../../hooks/useRegister.ts', () => ({
   useRegister: (opts: { onSuccess: (result: any) => void }) => ({
     mutate: (values: any) => {
@@ -48,13 +45,10 @@ vi.mock('../../../utilities/cookies.utilities.ts', async () => {
 
   return {
     ...actual,
-    // On override UNIQUEMENT setAuthCookies,
-    // tout le reste (getAccessToken, getRefreshToken, clearAuthCookies, ...) reste réel.
     setAuthCookies: (...args: any[]) => setAuthCookiesMock(...args),
   };
 });
 
-// Mock de la validation brute pour ne pas être couplé à l’implémentation exacte
 vi.mock('../../../utilities/password-validation.utilities.ts', () => ({
   validatePasswordRaw: (value: string) => ({
     valid: value.length >= 6,
@@ -62,8 +56,7 @@ vi.mock('../../../utilities/password-validation.utilities.ts', () => ({
   }),
 }));
 
-// ---------------------------------------------------------------------------
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 describe('<RegistrationForm />', () => {
   beforeEach(async () => {
     await i18nTest.changeLanguage('en');
