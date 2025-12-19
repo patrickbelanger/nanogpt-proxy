@@ -20,6 +20,7 @@ import type { RegisterRequestDto } from '../../dtos/register-request.dto.ts';
 import { useRegister } from '../../hooks/useRegister.ts';
 import PasswordStrengthMeter from '../customs/password-strength-meter.tsx';
 import { validatePasswordRaw } from '../../utilities/password-validation.utilities.ts';
+import { mapRegisterErrorToKey } from '../../utilities/register-error-mapping.utilities.ts';
 
 function RegistrationForm() {
   const { t } = useTranslation();
@@ -157,7 +158,7 @@ function RegistrationForm() {
 
             {error && (
               <Alert mt="md" color="red" variant="light" icon={<IconAlertCircle size={16} />}>
-                {error.message}
+                {t(mapRegisterErrorToKey(error))}
               </Alert>
             )}
           </Stepper.Step>

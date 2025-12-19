@@ -80,6 +80,12 @@
       "pending": "Votre compte a été créé et est en attente de validation. Vous pourrez vous connecter une fois qu’il aura été approuvé.",
       "success": "Votre compte a été créé avec succès. Connexion en cours..."
     },
+    "errors": {
+      "conflict": "Nous ne pouvons pas créer ce compte pour le moment. Veuillez vérifier vos informations ou réessayer plus tard.",
+      "forbidden": "Vous n’avez pas les permissions nécessaires pour effectuer cette action.",
+      "server": "Une erreur s’est produite sur le serveur. Veuillez réessayer plus tard.",
+      "generic": "L’inscription a échoué. Veuillez réessayer."
+    },
     "steps": {
       "email": {
         "label": "Courriel",

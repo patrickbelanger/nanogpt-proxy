@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useConfiguration } from '../../hooks/useConfiguration.ts';
 import { useAuth } from '../../hooks/useAuth.ts';
-import { mapLoginErrorToKey } from '../../utilities/login-error.utils.ts';
+import { mapLoginErrorToKey } from '../../utilities/login-error.utilities.ts';
 import type { AxiosError } from 'axios';
 
 function LoginForm() {

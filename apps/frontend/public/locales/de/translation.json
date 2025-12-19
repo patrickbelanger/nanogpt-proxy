@@ -82,6 +82,12 @@
       "pending": "Ihr Konto wurde erstellt und wartet auf Überprüfung. Sie können sich anmelden, sobald es genehmigt wurde.",
       "success": "Ihr Konto wurde erfolgreich erstellt. Sie werden jetzt angemeldet..."
     },
+    "errors": {
+      "conflict": "Dieses Konto kann derzeit nicht erstellt werden. Bitte überprüfen Sie Ihre Angaben oder versuchen Sie es später erneut.",
+      "forbidden": "Sie verfügen nicht über die erforderlichen Berechtigungen, um diese Aktion auszuführen.",
+      "server": "Es ist ein Serverfehler aufgetreten. Bitte versuchen Sie es später erneut.",
+      "generic": "Die Registrierung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+    },
     "steps": {
       "email": {
         "label": "E-Mail",

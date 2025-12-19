@@ -80,6 +80,12 @@
       "pending": "Tu cuenta ha sido creada y está pendiente de revisión. Podrás iniciar sesión una vez que sea aprobada.",
       "success": "Tu cuenta se ha creado correctamente. Iniciando sesión.."
     },
+    "errors": {
+      "conflict": "No podemos crear esta cuenta en este momento. Verifique su información o inténtelo de nuevo más tarde.",
+      "forbidden": "No tiene los permisos necesarios para realizar esta acción.",
+      "server": "Se ha producido un error en el servidor. Inténtelo de nuevo más tarde.",
+      "generic": "El registro ha fallado. Inténtelo de nuevo."
+    },
     "steps": {
       "email": {
         "label": "Correo electrónico",

@@ -80,6 +80,12 @@
       "pending": "Your account has been created and is pending review. You will be able to sign in once it is approved.",
       "success": "Your account has been created successfully. You are being logged in…"
     },
+    "errors": {
+      "conflict": "We’re unable to create this account at the moment. Please check your information or try again later.",
+      "forbidden": "You do not have the necessary permissions to perform this action.",
+      "server": "A server error occurred. Please try again later.",
+      "generic": "Registration failed. Please try again."
+    },
     "steps": {
       "email": {
         "label": "Email",

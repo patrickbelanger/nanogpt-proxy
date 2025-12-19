@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { AxiosError } from 'axios';
-import { type LoginErrorKey, mapLoginErrorToKey } from '../login-error.utils';
+import { type LoginErrorKey, mapLoginErrorToKey } from '../login-error.utilities';
 
 function createAxiosError(status?: number): AxiosError<unknown> {
   const error = new Error('test error') as AxiosError<unknown>;
