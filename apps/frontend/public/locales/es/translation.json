@@ -34,7 +34,8 @@
         "length": "Al menos 6 caracteres",
         "uppercase": "Al menos una letra mayúscula (A–Z)",
         "lowercase": "Al menos una letra minúscula (a–z)",
-        "special": "Al menos un carácter especial (p. ej. ! @ # $ % & *)"
+        "special": "Al menos un carácter especial (p. ej. ! @ # $ % & *)",
+        "noUsernamePart": "No debe contener tu nombre de usuario ni parte de tu correo electrónico"
       },
       "strength": {
         "label": "Fortaleza de la contraseña",

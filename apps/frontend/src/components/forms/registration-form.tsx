@@ -149,7 +149,10 @@ function RegistrationForm() {
                 {...form.getInputProps('password')}
               />
 
-              <PasswordStrengthMeter password={form.values.password} />
+              <PasswordStrengthMeter
+                password={form.values.password}
+                usernameOrEmail={form.values.email}
+              />
             </Box>
 
             {error && (

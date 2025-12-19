@@ -7,7 +7,7 @@ import RegistrationForm from './components/forms/registration-form.tsx';
 import SettingsForm from './components/forms/settings-form.tsx';
 import AdministerForm from './components/forms/administer-form.tsx';
 import ApiKeyForm from './components/forms/apikey-form.tsx';
-import ProfileForm from './components/forms/schemas/profile-form.tsx';
+import ProfileForm from './components/forms/profile-form.tsx';
 
 function App() {
   return (

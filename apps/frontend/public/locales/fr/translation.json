@@ -34,7 +34,8 @@
         "length": "Au moins 6 caractères",
         "uppercase": "Au moins une lettre majuscule (A–Z)",
         "lowercase": "Au moins une lettre minuscule (a–z)",
-        "special": "Au moins un caractère spécial (p. ex. ! @ # $ % & *)"
+        "special": "Au moins un caractère spécial (p. ex. ! @ # $ % & *)",
+        "noUsernamePart": "Ne doit pas contenir votre nom d'utilisateur ni une partie de votre adresse e-mail"
       },
       "strength": {
         "label": "Solidité du mot de passe",

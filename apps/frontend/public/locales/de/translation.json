@@ -34,7 +34,8 @@
         "length": "Mindestens 6 Zeichen",
         "uppercase": "Mindestens ein Großbuchstabe (A–Z)",
         "lowercase": "Mindestens ein Kleinbuchstabe (a–z)",
-        "special": "Mindestens ein Sonderzeichen (z. B. ! @ # $ % & *)"
+        "special": "Mindestens ein Sonderzeichen (z. B. ! @ # $ % & *)",
+        "noUsernamePart": "Darf Ihren Benutzernamen oder Teile Ihrer E-Mail-Adresse nicht enthalten"
       },
       "strength": {
         "label": "Passwortstärke",
@@ -62,7 +63,7 @@
     "items": {
       "administer": "Verwalten",
       "apiKey": "API-Schlüssel",
-      "profile": "Profil",
+      "profile": "Perfil",
       "settings": "Einstellungen",
       "logout": "Abmelden"
     }

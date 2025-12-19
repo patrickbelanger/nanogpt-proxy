@@ -34,7 +34,8 @@
         "length": "At least 6 characters",
         "uppercase": "At least one uppercase letter (A–Z)",
         "lowercase": "At least one lowercase letter (a–z)",
-        "special": "At least one special character (e.g. ! @ # $ % & *)"
+        "special": "At least one special character (e.g. ! @ # $ % & *)",
+        "noUsernamePart": "Must not contain your username or email part"
       },
       "strength": {
         "label": "Password strength",
@@ -62,7 +63,7 @@
     "items": {
       "administer": "Administer",
       "apiKey": "API Key",
-      "profile": "Perfil",
+      "profile": "Profile",
       "settings": "Settings",
       "logout": "Log out"
     }

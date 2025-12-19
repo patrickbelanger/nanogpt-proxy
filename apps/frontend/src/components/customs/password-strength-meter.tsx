@@ -8,9 +8,10 @@ const specialCharsRegex = /[!@#$%^&*()\-_=+[{}\];:,.<>/?]/;
 
 type PasswordStrengthMeterProps = {
   password: string;
+  usernameOrEmail?: string;
 };
 
-function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
+function PasswordStrengthMeter({ password, usernameOrEmail }: PasswordStrengthMeterProps) {
   const { t } = useTranslation();
 
   const { strength, label, rules } = useMemo(() => {
@@ -19,8 +20,25 @@ function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
     const lowerOk = /[a-z]/.test(password);
     const specialOk = specialCharsRegex.test(password);
 
-    const passed = [lengthOk, upperOk, lowerOk, specialOk].filter(Boolean).length;
-    const strength = (passed / 4) * 100;
+    const normalizedPassword = password.toLowerCase();
+    const normalizedUser = usernameOrEmail?.toLowerCase().trim() ?? '';
+
+    let containsUsernamePart = false;
+
+    if (normalizedUser && normalizedUser.length >= 3) {
+      const [localPart] = normalizedUser.split('@');
+      const candidate = (localPart || normalizedUser).trim();
+
+      if (candidate.length >= 3) {
+        containsUsernamePart = normalizedPassword.includes(candidate);
+      }
+    }
+
+    const noUsernamePartOk = !containsUsernamePart;
+
+    const checks = [lengthOk, upperOk, lowerOk, specialOk, noUsernamePartOk];
+    const passed = checks.filter(Boolean).length;
+    const strength = (passed / checks.length) * 100;
 
     let labelKey: string;
     if (strength === 0) {
@@ -43,9 +61,13 @@ function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
         { ok: upperOk, text: t('input.password.rules.uppercase') },
         { ok: lowerOk, text: t('input.password.rules.lowercase') },
         { ok: specialOk, text: t('input.password.rules.special') },
+        {
+          ok: noUsernamePartOk,
+          text: t('input.password.rules.noUsernamePart'),
+        },
       ],
     };
-  }, [password, t]);
+  }, [password, usernameOrEmail, t]);
 
   if (!password) {
     return (
@@ -59,6 +81,7 @@ function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
             'input.password.rules.uppercase',
             'input.password.rules.lowercase',
             'input.password.rules.special',
+            'input.password.rules.noUsernamePart',
           ].map((key) => (
             <List.Item
               key={key}
