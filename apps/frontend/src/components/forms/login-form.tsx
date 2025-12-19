@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useConfiguration } from '../../hooks/useConfiguration.ts';
 import { useAuth } from '../../hooks/useAuth.ts';
+import { mapLoginErrorToKey } from '../../utilities/login-error.utils.ts';
+import type { AxiosError } from 'axios';
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -67,6 +69,13 @@ function LoginForm() {
   const enableRegistration = config?.registration ?? false;
   const showActions = enableForgot || enableRegistration;
 
+  let errorMessage: string | null = null;
+
+  if (error) {
+    const key = mapLoginErrorToKey(error as AxiosError<unknown>);
+    errorMessage = t(key);
+  }
+
   return (
     <Container size={420} my={40}>
       <Title ta="center" className={classes.title}>
@@ -101,7 +110,7 @@ function LoginForm() {
 
           {!!error && (
             <Alert mt="md" color="red" variant="light" icon={<IconAlertCircle size={16} />}>
-              {error?.message}
+              {errorMessage}
             </Alert>
           )}
 

@@ -51,7 +51,13 @@
     "title": "Welcome back!",
     "forgotPassword": "Forgot Password",
     "register": "Sign Up",
-    "registrationPendingReviewHint": "Your account registration may be under review, or subject to further verification."
+    "registrationPendingReviewHint": "Your account registration may be under review, or subject to further verification.",
+    "errors": {
+      "invalidCredentials": "Incorrect email/password combination.",
+      "forbidden": "You don’t have permission to access this area.",
+      "server": "An error occurred on the server. Please try again later.",
+      "generic": "Login failed. Please try again."
+    }
   },
   "footer": {
     "authors": "NanoGPT Proxy Contributors",

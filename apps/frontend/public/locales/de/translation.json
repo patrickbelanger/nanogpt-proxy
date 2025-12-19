@@ -51,7 +51,15 @@
     "title": "Willkommen zurück!",
     "forgotPassword": "Passwort vergessen",
     "register": "Konto erstellen",
-    "registrationPendingReviewHint": "Die Registrierung Ihres Kontos kann derzeit geprüft werden oder zusätzlichen Überprüfungen unterliegen."
+    "registrationPendingReviewHint": "Die Registrierung Ihres Kontos kann derzeit geprüft werden oder zusätzlichen Überprüfungen unterliegen.",
+    "login": {
+      "errors": {
+        "invalidCredentials": "Ungültige Kombination aus E-Mail und Passwort.",
+        "forbidden": "Sie verfügen nicht über die erforderlichen Berechtigungen, um auf diesen Bereich zuzugreifen.",
+        "server": "Auf dem Server ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        "generic": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    }
   },
   "footer": {
     "authors": "NanoGPT Proxy-Mitwirkende",

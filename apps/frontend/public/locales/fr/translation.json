@@ -51,7 +51,13 @@
     "title": "Ravis de vous revoir!",
     "forgotPassword": "Mot de passe oublié",
     "register": "Créer un compte",
-    "registrationPendingReviewHint": "L’enregistrement de votre compte peut être en cours d’examen ou soumis à des vérifications supplémentaires."
+    "registrationPendingReviewHint": "L’enregistrement de votre compte peut être en cours d’examen ou soumis à des vérifications supplémentaires.",
+    "errors": {
+      "invalidCredentials": "Combinaison courriel/mot de passe incorrecte.",
+      "forbidden": "Vous n’avez pas les permissions nécessaires pour accéder à cette section.",
+      "server": "Une erreur s’est produite sur le serveur. Veuillez réessayer plus tard.",
+      "generic": "La connexion a échoué. Veuillez réessayer."
+    }
   },
   "footer": {
     "authors": "Contributeurs NanoGPT Proxy",

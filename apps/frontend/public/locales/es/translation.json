@@ -51,7 +51,13 @@
     "title": "¡Bienvenido de nuevo!",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "register": "Crear cuenta",
-    "registrationPendingReviewHint": "El registro de tu cuenta puede estar en revisión o sujeto a verificaciones adicionales."
+    "registrationPendingReviewHint": "El registro de tu cuenta puede estar en revisión o sujeto a verificaciones adicionales.",
+    "errors": {
+      "invalidCredentials": "Combinación de correo electrónico y contraseña incorrecta.",
+      "forbidden": "No tiene los permisos necesarios para acceder a esta sección.",
+      "server": "Se ha producido un error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+      "generic": "El inicio de sesión ha fallado. Por favor, vuelva a intentarlo."
+    }
   },
   "footer": {
     "authors": "Colaboradores de NanoGPT Proxy",
