@@ -19,18 +19,20 @@ export class UsersService {
     private readonly security: SecurityService,
   ) {}
 
-  async createUser(dto: CreateUserDto): Promise<void> {
+  async createUser(dto: CreateUserDto, opts?: { enabled?: boolean; role?: string }): Promise<void> {
     const exists = await this.users.getUser(dto.email);
     if (exists) {
       throw new ConflictException('User already exists');
     }
 
     const passwordHash = await this.security.hashPassword(dto.password);
-    const apiKeyEncrypted = this.cryptorService.encrypt(dto.api_key);
+    const apiKeyEncrypted = dto.api_key ? this.cryptorService.encrypt(dto.api_key) : '';
 
     const user = toNewUserEntity(dto, {
       passwordHash,
       apiKeyEncrypted,
+      defaultRole: opts?.role ?? 'USER',
+      enabled: opts?.enabled ?? true,
     });
 
     await this.users.saveUser(user);

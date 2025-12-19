@@ -1,7 +1,6 @@
+import { bootstrap } from './main';
 import { NestFactory } from '@nestjs/core';
 import { EnvironmentService } from '@nanogpt-monorepo/core';
-import { AppModule } from './app.module';
-import { bootstrap } from './main';
 
 jest.mock('@nestjs/core', () => ({
   NestFactory: {
@@ -9,26 +8,114 @@ jest.mock('@nestjs/core', () => ({
   },
 }));
 
+const mockEnableCors = jest.fn();
+const mockListen = jest.fn();
+const mockGet = jest.fn();
+
 describe('bootstrap', () => {
-  it('should create the app, resolve EnvironmentService and listen on proxyPort', async () => {
-    const listenMock = jest.fn();
-    const getMock = jest.fn();
+  beforeEach(() => {
+    jest.clearAllMocks();
 
     (NestFactory.create as jest.Mock).mockResolvedValue({
-      get: getMock,
-      listen: listenMock,
+      enableCors: mockEnableCors,
+      listen: mockListen,
+      get: mockGet,
     });
 
-    const envServiceMock = {
-      proxyPort: 4242,
-    } as unknown as EnvironmentService;
+    delete process.env.CORS_ORIGINS;
+  });
 
-    getMock.mockReturnValue(envServiceMock);
+  it('configure CORS avec les fallback origins et écoute sur le adminPort', async () => {
+    /* Arrange */
+    mockGet.mockImplementation((token) => {
+      if (token === EnvironmentService) {
+        return { adminPort: 3001 };
+      }
+      return undefined;
+    });
 
+    /* Act */
     await bootstrap();
 
-    expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
-    expect(getMock).toHaveBeenCalledWith(EnvironmentService);
-    expect(listenMock).toHaveBeenCalledWith(envServiceMock.proxyPort);
+    /* Assert */
+    expect(NestFactory.create).toHaveBeenCalled();
+
+    expect(mockEnableCors).toHaveBeenCalledTimes(1);
+    const corsOptions = mockEnableCors.mock.calls[0][0];
+
+    expect(corsOptions.credentials).toBe(true);
+    expect(corsOptions.methods).toEqual([
+      'GET',
+      'HEAD',
+      'PUT',
+      'PATCH',
+      'POST',
+      'DELETE',
+      'OPTIONS',
+    ]);
+    expect(corsOptions.allowedHeaders).toEqual([
+      'Content-Type',
+      'Authorization',
+      'x-refresh-token',
+    ]);
+
+    /* Testing origin branches */
+    const originFn = corsOptions.origin as (
+      origin: string | undefined,
+      cb: (err: Error | null, allow?: boolean) => void,
+    ) => void;
+
+    const cbNoOrigin = jest.fn();
+    originFn(undefined, cbNoOrigin);
+    expect(cbNoOrigin).toHaveBeenCalledWith(null, true);
+
+    const cbAllowed = jest.fn();
+    originFn('http://localhost:5173', cbAllowed);
+    expect(cbAllowed).toHaveBeenCalledWith(null, true);
+
+    const cbBlocked = jest.fn();
+    originFn('http://evil.com', cbBlocked);
+    expect(cbBlocked.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(cbBlocked.mock.calls[0][1]).toBe(false);
+
+    expect(mockGet).toHaveBeenCalledWith(EnvironmentService);
+    expect(mockListen).toHaveBeenCalledWith(3001);
+  });
+
+  it('utilise CORS_ORIGINS quand la variable est définie', async () => {
+    /* Arrange */
+    process.env.CORS_ORIGINS = 'http://foo.com, http://bar.com';
+
+    mockGet.mockImplementation((token) => {
+      if (token === EnvironmentService) {
+        return { adminPort: 4000 };
+      }
+      return undefined;
+    });
+
+    /* Act */
+    await bootstrap();
+
+    /* Assert */
+    expect(mockEnableCors).toHaveBeenCalledTimes(1);
+    const corsOptions = mockEnableCors.mock.calls[0][0];
+
+    const originFn = corsOptions.origin as (
+      origin: string | undefined,
+      cb: (err: Error | null, allow?: boolean) => void,
+    ) => void;
+
+    /* Authorized origin (present in CORS_ORIGINS) */
+    const cbFoo = jest.fn();
+    originFn('http://foo.com', cbFoo);
+    expect(cbFoo).toHaveBeenCalledWith(null, true);
+
+    /* Unauthorized origin */
+    const cbLocalhost = jest.fn();
+    originFn('http://localhost:5173', cbLocalhost);
+    expect(cbLocalhost.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(cbLocalhost.mock.calls[0][1]).toBe(false);
+
+    expect(mockListen).toHaveBeenCalledWith(4000);
   });
 });

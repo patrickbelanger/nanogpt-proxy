@@ -1,7 +1,16 @@
 {
   "button": {
+    "back": {
+      "label": "Retour"
+    },
+    "createAccount": {
+      "label": "Créer un compte"
+    },
     "login": {
       "label": "Connexion"
+    },
+    "next": {
+      "label": "Suivant"
     }
   },
   "input": {
@@ -16,11 +25,100 @@
       "label": "Mot de passe",
       "placeholder": "Mot de passe",
       "errors": {
-        "min": "Le mot de passe doit contenir au moins 6 caractères"
+        "min": "Le mot de passe doit contenir au moins 6 caractères",
+        "uppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+        "lowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+        "special": "Le mot de passe doit contenir au moins un caractère spécial"
+      },
+      "rules": {
+        "length": "Au moins 6 caractères",
+        "uppercase": "Au moins une lettre majuscule (A–Z)",
+        "lowercase": "Au moins une lettre minuscule (a–z)",
+        "special": "Au moins un caractère spécial (p. ex. ! @ # $ % & *)",
+        "noUsernamePart": "Ne doit pas contenir votre nom d'utilisateur ni une partie de votre adresse e-mail"
+      },
+      "strength": {
+        "label": "Solidité du mot de passe",
+        "empty": "Non défini",
+        "weak": "Faible",
+        "fair": "Moyenne",
+        "good": "Bonne",
+        "strong": "Très bonne"
       }
     }
   },
   "login": {
-    "title": "Ravis de vous revoir!"
+    "title": "Ravis de vous revoir!",
+    "forgotPassword": "Mot de passe oublié",
+    "register": "Créer un compte",
+    "registrationPendingReviewHint": "L’enregistrement de votre compte peut être en cours d’examen ou soumis à des vérifications supplémentaires.",
+    "errors": {
+      "invalidCredentials": "Combinaison courriel/mot de passe incorrecte.",
+      "forbidden": "Vous n’avez pas les permissions nécessaires pour accéder à cette section.",
+      "server": "Une erreur s’est produite sur le serveur. Veuillez réessayer plus tard.",
+      "generic": "La connexion a échoué. Veuillez réessayer."
+    }
+  },
+  "footer": {
+    "authors": "Contributeurs NanoGPT Proxy",
+    "allRightsReserved": "Tous droits réservés.",
+    "disclaimer": "Avertissement : NanoGPT Proxy est un projet indépendant et n’est ni affilié, ni associé, ni approuvé par NanoGPT. Les marques et noms de produits mentionnés appartiennent à leurs propriétaires respectifs.",
+    "license": "Ce projet est distribué sous licence Lina Public License (LPL) v1.0."
+  },
+  "menu": {
+    "items": {
+      "administer": "Administrer",
+      "apiKey": "Clé API",
+      "profile": "Profile",
+      "settings": "Paramètres",
+      "logout": "Déconnexion"
+    }
+  },
+  "register": {
+    "status": {
+      "creating": "Création de votre compte...",
+      "pending": "Votre compte a été créé et est en attente de validation. Vous pourrez vous connecter une fois qu’il aura été approuvé.",
+      "success": "Votre compte a été créé avec succès. Connexion en cours..."
+    },
+    "errors": {
+      "conflict": "Nous ne pouvons pas créer ce compte pour le moment. Veuillez vérifier vos informations ou réessayer plus tard.",
+      "forbidden": "Vous n’avez pas les permissions nécessaires pour effectuer cette action.",
+      "server": "Une erreur s’est produite sur le serveur. Veuillez réessayer plus tard.",
+      "generic": "L’inscription a échoué. Veuillez réessayer."
+    },
+    "steps": {
+      "email": {
+        "label": "Courriel",
+        "description": "Saisissez votre adresse courriel"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "description": "Choisissez un mot de passe sécurisé"
+      }
+    },
+    "title": "Créez votre compte"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Connexion et inscription",
+        "description": "Gérer les fonctionnalités disponibles sur les écrans de connexion et d'inscription."
+      }
+    },
+    "forgetPassword": {
+      "label": "Mot de passe oublié",
+      "description": "Autoriser les utilisateurs à demander une réinitialisation de mot de passe depuis l'écran de connexion."
+    },
+    "registration": {
+      "label": "Inscription des utilisateurs",
+      "description": "Permettre aux nouveaux utilisateurs de créer un compte depuis l'écran de connexion."
+    },
+    "reviewPendingRegistration": {
+      "label": "Examiner les inscriptions",
+      "description": "Les nouveaux comptes doivent être approuvés manuellement avant de pouvoir se connecter."
+    },
+    "errors": {
+      "load": "Impossible de charger la configuration."
+    }
   }
 }

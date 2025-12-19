@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  Group,
   Paper,
   PasswordInput,
   Text,
@@ -14,13 +15,19 @@ import { useLogin } from '../../hooks/useLogin.ts';
 import { useForm } from '@mantine/form';
 import type { LoginRequestDto } from '../../dtos/login-request.dto.ts';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { setAuthCookies } from '../../utilities/cookies.utilities.ts';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { useConfiguration } from '../../hooks/useConfiguration.ts';
+import { useAuth } from '../../hooks/useAuth.ts';
+import { mapLoginErrorToKey } from '../../utilities/login-error.utilities.ts';
+import type { AxiosError } from 'axios';
 
 function LoginForm() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const { config: config } = useConfiguration();
+  const { setSession } = useAuth();
 
   const {
     mutate: login,
@@ -28,11 +35,11 @@ function LoginForm() {
     error,
   } = useLogin({
     onSuccess: (data) => {
-      setAuthCookies({
+      setSession({
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       });
-      navigate('/admin', { replace: true });
+      navigate(data.role == 'ADMIN' ? '/admin' : '/admin/apikey', { replace: true });
     },
     onError: (err) => {
       console.error('Login failed', err);
@@ -57,6 +64,17 @@ function LoginForm() {
       password: values.password,
     });
   };
+
+  const enableForgot = config?.forgetPassword ?? false;
+  const enableRegistration = config?.registration ?? false;
+  const showActions = enableForgot || enableRegistration;
+
+  let errorMessage: string | null = null;
+
+  if (error) {
+    const key = mapLoginErrorToKey(error as AxiosError<unknown>);
+    errorMessage = t(key);
+  }
 
   return (
     <Container size={420} my={40}>
@@ -92,13 +110,37 @@ function LoginForm() {
 
           {!!error && (
             <Alert mt="md" color="red" variant="light" icon={<IconAlertCircle size={16} />}>
-              {error?.message}
+              {errorMessage}
             </Alert>
           )}
 
           <Button fullWidth mt="xl" radius="md" type="submit" loading={isPending}>
             {t('button.login.label')}
           </Button>
+
+          {showActions && (
+            <Box mt="md">
+              <Group justify="space-between" gap="xs" wrap="wrap">
+                {enableForgot && (
+                  <Button variant="subtle" size="xs" onClick={() => navigate('/forgot-password')}>
+                    {t('login.forgotPassword')}
+                  </Button>
+                )}
+
+                {enableRegistration && (
+                  <Button variant="outline" size="xs" onClick={() => navigate('/registration')}>
+                    {t('login.register')}
+                  </Button>
+                )}
+              </Group>
+
+              {enableRegistration && config?.reviewPendingRegistration && (
+                <Text mt="xs" size="xs" c="dimmed">
+                  {t('login.registrationPendingReviewHint')}
+                </Text>
+              )}
+            </Box>
+          )}
         </Box>
       </Paper>
     </Container>

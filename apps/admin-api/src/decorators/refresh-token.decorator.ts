@@ -4,7 +4,8 @@ import { Request } from 'express';
 export function extractRefreshTokenFromContext(ctx: ExecutionContext): string {
   const req = ctx.switchToHttp().getRequest<Request>();
 
-  const headerValue: string | string[] | undefined = req.headers['x-refresh-token'];
+  const headerValue: string | string[] | undefined =
+    req.headers['x-refresh-token'] ?? req.headers['authorization'];
 
   if (!headerValue) {
     throw new UnauthorizedException('Missing refresh token');

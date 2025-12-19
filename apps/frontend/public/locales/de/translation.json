@@ -1,0 +1,126 @@
+{
+  "button": {
+    "back": {
+      "label": "Zurück"
+    },
+    "createAccount": {
+      "label": "Konto erstellen"
+    },
+    "login": {
+      "label": "Anmelden"
+    },
+    "next": {
+      "label": "Weiter"
+    }
+  },
+  "input": {
+    "email": {
+      "label": "E-Mail",
+      "placeholder": "user@domain.net",
+      "errors": {
+        "format": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+      }
+    },
+    "password": {
+      "label": "Passwort",
+      "placeholder": "Passwort",
+      "errors": {
+        "min": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+        "uppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
+        "lowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
+        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten"
+      },
+      "rules": {
+        "length": "Mindestens 6 Zeichen",
+        "uppercase": "Mindestens ein Großbuchstabe (A–Z)",
+        "lowercase": "Mindestens ein Kleinbuchstabe (a–z)",
+        "special": "Mindestens ein Sonderzeichen (z. B. ! @ # $ % & *)",
+        "noUsernamePart": "Darf Ihren Benutzernamen oder Teile Ihrer E-Mail-Adresse nicht enthalten"
+      },
+      "strength": {
+        "label": "Passwortstärke",
+        "empty": "Nicht gesetzt",
+        "weak": "Schwach",
+        "fair": "Mittel",
+        "good": "Gut",
+        "strong": "Sehr gut"
+      }
+    }
+  },
+  "login": {
+    "title": "Willkommen zurück!",
+    "forgotPassword": "Passwort vergessen",
+    "register": "Konto erstellen",
+    "registrationPendingReviewHint": "Die Registrierung Ihres Kontos kann derzeit geprüft werden oder zusätzlichen Überprüfungen unterliegen.",
+    "login": {
+      "errors": {
+        "invalidCredentials": "Ungültige Kombination aus E-Mail und Passwort.",
+        "forbidden": "Sie verfügen nicht über die erforderlichen Berechtigungen, um auf diesen Bereich zuzugreifen.",
+        "server": "Auf dem Server ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        "generic": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "footer": {
+    "authors": "NanoGPT Proxy-Mitwirkende",
+    "allRightsReserved": "Alle Rechte vorbehalten.",
+    "disclaimer": "Hinweis: NanoGPT Proxy ist ein unabhängiges Projekt und steht in keiner Verbindung zu NanoGPT. Es ist weder affiliiert, noch assoziiert, noch von NanoGPT genehmigt oder gesponsert. Alle Marken und Produktnamen sind Eigentum ihrer jeweiligen Inhaber.",
+    "license": "Dieses Projekt steht unter der Lina Public License (LPL) Version 1.0."
+  },
+  "menu": {
+    "items": {
+      "administer": "Verwalten",
+      "apiKey": "API-Schlüssel",
+      "profile": "Perfil",
+      "settings": "Einstellungen",
+      "logout": "Abmelden"
+    }
+  },
+  "register": {
+    "status": {
+      "creating": "Ihr Konto wird erstellt...",
+      "pending": "Ihr Konto wurde erstellt und wartet auf Überprüfung. Sie können sich anmelden, sobald es genehmigt wurde.",
+      "success": "Ihr Konto wurde erfolgreich erstellt. Sie werden jetzt angemeldet..."
+    },
+    "errors": {
+      "conflict": "Dieses Konto kann derzeit nicht erstellt werden. Bitte überprüfen Sie Ihre Angaben oder versuchen Sie es später erneut.",
+      "forbidden": "Sie verfügen nicht über die erforderlichen Berechtigungen, um diese Aktion auszuführen.",
+      "server": "Es ist ein Serverfehler aufgetreten. Bitte versuchen Sie es später erneut.",
+      "generic": "Die Registrierung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+    },
+    "steps": {
+      "email": {
+        "label": "E-Mail",
+        "description": "Geben Sie Ihre E-Mail-Adresse ein"
+      },
+      "password": {
+        "label": "Passwort",
+        "description": "Wählen Sie ein sicheres Passwort"
+      }
+    },
+    "title": "Erstellen Sie Ihr Konto"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Anmeldung und Registrierung",
+        "description": "Verwalten Sie die Funktionen, die auf den Anmelde- und Registrierungsseiten verfügbar sind."
+      }
+    },
+    "forgetPassword": {
+      "label": "Passwort vergessen",
+      "description": "Benutzern erlauben, auf der Anmeldeseite eine Zurücksetzung des Passworts anzufordern."
+    },
+    "registration": {
+      "label": "Benutzerregistrierung",
+      "description": "Neuen Benutzern ermöglichen, auf der Anmeldeseite ein Konto zu erstellen."
+    },
+    "reviewPendingRegistration": {
+      "label": "Registrierungen prüfen",
+      "description": "Neue Konten müssen manuell genehmigt werden, bevor sie sich anmelden können."
+    },
+    "errors": {
+      "load": "Konfiguration konnte nicht geladen werden."
+    }
+  }
+}

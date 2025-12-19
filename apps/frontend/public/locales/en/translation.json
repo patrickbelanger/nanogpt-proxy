@@ -1,7 +1,16 @@
 {
   "button": {
+    "back": {
+      "label": "Back"
+    },
+    "createAccount": {
+      "label": "Create account"
+    },
     "login": {
       "label": "Login"
+    },
+    "next": {
+      "label": "Next"
     }
   },
   "input": {
@@ -16,11 +25,100 @@
       "label": "Password",
       "placeholder": "Password",
       "errors": {
-        "min": "Password must be at least 6 characters"
+        "min": "Password must be at least 6 characters",
+        "uppercase": "Password must contain at least one uppercase letter",
+        "lowercase": "Password must contain at least one lowercase letter",
+        "special": "Password must contain at least one special character"
+      },
+      "rules": {
+        "length": "At least 6 characters",
+        "uppercase": "At least one uppercase letter (A–Z)",
+        "lowercase": "At least one lowercase letter (a–z)",
+        "special": "At least one special character (e.g. ! @ # $ % & *)",
+        "noUsernamePart": "Must not contain your username or email part"
+      },
+      "strength": {
+        "label": "Password strength",
+        "empty": "Not set",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong"
       }
     }
   },
   "login": {
-    "title": "Welcome back!"
+    "title": "Welcome back!",
+    "forgotPassword": "Forgot Password",
+    "register": "Sign Up",
+    "registrationPendingReviewHint": "Your account registration may be under review, or subject to further verification.",
+    "errors": {
+      "invalidCredentials": "Incorrect email/password combination.",
+      "forbidden": "You don’t have permission to access this area.",
+      "server": "An error occurred on the server. Please try again later.",
+      "generic": "Login failed. Please try again."
+    }
+  },
+  "footer": {
+    "authors": "NanoGPT Proxy Contributors",
+    "allRightsReserved": "All rights reserved.",
+    "disclaimer": "Disclaimer: NanoGPT Proxy is an independent project and is not affiliated with, associated with, endorsed by, or sponsored by NanoGPT. All trademarks and product names are the property of their respective owners.",
+    "license": "This project is licensed under the Lina Public License (LPL) v1.0."
+  },
+  "menu": {
+    "items": {
+      "administer": "Administer",
+      "apiKey": "API Key",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "register": {
+    "status": {
+      "creating": "Creating your account...",
+      "pending": "Your account has been created and is pending review. You will be able to sign in once it is approved.",
+      "success": "Your account has been created successfully. You are being logged in…"
+    },
+    "errors": {
+      "conflict": "We’re unable to create this account at the moment. Please check your information or try again later.",
+      "forbidden": "You do not have the necessary permissions to perform this action.",
+      "server": "A server error occurred. Please try again later.",
+      "generic": "Registration failed. Please try again."
+    },
+    "steps": {
+      "email": {
+        "label": "Email",
+        "description": "Enter your email address"
+      },
+      "password": {
+        "label": "Password",
+        "description": "Choose a secure password"
+      }
+    },
+    "title": "Create your account"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Login and Registration",
+        "description": "Manage the features available on the login and registration screens."
+      }
+    },
+    "forgetPassword": {
+      "label": "Forgot password",
+      "description": "Allow users to request a password reset from the login screen."
+    },
+    "registration": {
+      "label": "User registration",
+      "description": "Allow new users to create an account from the login screen."
+    },
+    "reviewPendingRegistration": {
+      "label": "Review registrations",
+      "description": "New accounts require manual approval before they can sign in."
+    },
+    "errors": {
+      "load": "Unable to load configuration."
+    }
   }
 }

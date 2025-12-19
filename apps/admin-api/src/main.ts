@@ -16,7 +16,10 @@ export async function bootstrap(): Promise<void> {
   const allowedOrigins = corsOrigins.length ? corsOrigins : fallbackOrigins;
 
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
       if (!origin) {
         return callback(null, true);
       }
@@ -33,7 +36,7 @@ export async function bootstrap(): Promise<void> {
     },
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-refresh-token'],
   });
 
   const environmentService = app.get(EnvironmentService);

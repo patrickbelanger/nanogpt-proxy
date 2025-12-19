@@ -12,6 +12,26 @@ Content-Type: application/json
 %}
 ###
 
+### POST login (alternate)
+POST http://{{host}}:{{port}}/v1/auth/login/
+Content-Type: application/json
+
+{
+  "email": "laurie@sss.io",
+  "password": "so-secure!"
+}
+
+> {%
+    client.global.set("token", response.body.accessToken);
+%}
+###
+
+### GET users (secured)
+GET http://localhost:{{port}}/v1/users
+Authorization: Bearer {{token}}
+
+###
+
 ### POST users (already exists)
 POST http://localhost:{{port}}/v1/users
 Content-Type: application/json
@@ -30,7 +50,8 @@ Authorization: Bearer {{token}}
 
 {
   "email": "laurie@sss.io",
-  "password": "so-secure!"
+  "password": "so-secure!",
+  "api_key": ""
 }
 ###
 
@@ -40,8 +61,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "email": "laurie@sss.io",
-  "password": "so-secure!"
+  "email": "laurie@sss.io"
 }
 ###
 
@@ -54,7 +74,8 @@ Authorization: Bearer {{token}}
   "email": "laurie@sss.io",
   "password": "so-secure!",
   "api_key": "f84c1d96-936d-4649-a6ee-cf231f4392c2",
-  "role": "USER"
+  "role": "USER",
+  "enabled": "true"
 }
 ###
 
@@ -81,12 +102,6 @@ Authorization: Bearer {{token}}
   "password": "so-secure!",
   "role": "USER"
 }
-###
-
-### GET users (secured)
-GET http://localhost:{{port}}/v1/users
-Authorization: Bearer {{token}}
-
 ###
 
 ### GET users (should block)

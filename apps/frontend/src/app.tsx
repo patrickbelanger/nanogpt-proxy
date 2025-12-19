@@ -3,6 +3,11 @@ import LoginLayout from './components/layouts/login-layout.tsx';
 import LoginForm from './components/forms/login-form.tsx';
 import { AuthGuard } from './guards/auth.guard.tsx';
 import AdminLayout from './components/layouts/admin-layout.tsx';
+import RegistrationForm from './components/forms/registration-form.tsx';
+import SettingsForm from './components/forms/settings-form.tsx';
+import AdministerForm from './components/forms/administer-form.tsx';
+import ApiKeyForm from './components/forms/apikey-form.tsx';
+import ProfileForm from './components/forms/profile-form.tsx';
 
 function App() {
   return (
@@ -10,13 +15,16 @@ function App() {
       {/* Public route(s) */}
       <Route path="/" element={<LoginLayout />}>
         <Route index element={<LoginForm />} />
+        <Route path="/registration" element={<RegistrationForm />} />
       </Route>
 
       {/* Private route(s) */}
       <Route element={<AuthGuard />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<>Admin dashboard to implement</>} />
-          <Route path="apikey" element={<>Api keys</>} />
+          <Route index element={<AdministerForm />} />
+          <Route path="apikey" element={<ApiKeyForm />} />
+          <Route path="profile" element={<ProfileForm />} />
+          <Route path="settings" element={<SettingsForm />} />
         </Route>
       </Route>
 

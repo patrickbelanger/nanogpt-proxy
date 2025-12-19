@@ -1,19 +1,34 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
-import axios from 'axios';
 
-import { getAccessToken } from '../../utilities/cookies.utilities';
 import type { LogoutResponseDto } from '../../dtos/logout-response.dto';
 import { useLogout } from '../useLogout.ts';
 import { renderWithProviders } from '../../__tests__/utilities/test.utilities.tsx';
 
-vi.mock('axios');
-vi.mock('../../utilities/cookies.utilities', () => ({
-  getAccessToken: vi.fn(),
+vi.mock('../../apis/axios-client.ts', () => ({
+  api: {
+    post: vi.fn(),
+  },
 }));
 
-const mockedAxiosPost = axios.post as unknown as Mock;
-const mockedGetAccessToken = getAccessToken as unknown as Mock;
+vi.mock('../../utilities/cookies.utilities', async () => {
+  const actual = await vi.importActual<typeof import('../../utilities/cookies.utilities')>(
+    '../../utilities/cookies.utilities',
+  );
+
+  return {
+    ...actual,
+    getAccessToken: vi.fn(),
+  };
+});
+
+import { api } from '../../apis/axios-client.ts';
+import { getAccessToken } from '../../utilities/cookies.utilities';
+
+const mockedApi = api as unknown as {
+  post: ReturnType<typeof vi.fn>;
+};
+const mockedGetAccessToken = getAccessToken as unknown as ReturnType<typeof vi.fn>;
 
 function TestComponent(props: {
   onSuccess?: (data: LogoutResponseDto) => void;
@@ -34,7 +49,7 @@ describe('useLogout hook', () => {
     vi.clearAllMocks();
   });
 
-  it('calls axios with bearer header when access token exists and triggers onSuccess', async () => {
+  it('calls api with bearer header when access token exists and triggers onSuccess', async () => {
     /* Arrange */
     const onSuccess = vi.fn();
     const onError = vi.fn();
@@ -42,7 +57,7 @@ describe('useLogout hook', () => {
     const fakeResponse: LogoutResponseDto = { success: true };
 
     mockedGetAccessToken.mockReturnValue('access-token-value');
-    mockedAxiosPost.mockResolvedValueOnce({ data: fakeResponse });
+    mockedApi.post.mockResolvedValueOnce({ data: fakeResponse });
 
     /* Act */
     renderWithProviders(<TestComponent onSuccess={onSuccess} onError={onError} />);
@@ -57,8 +72,8 @@ describe('useLogout hook', () => {
 
     expect(onError).not.toHaveBeenCalled();
 
-    expect(mockedAxiosPost).toHaveBeenCalledTimes(1);
-    expect(mockedAxiosPost).toHaveBeenCalledWith(
+    expect(mockedApi.post).toHaveBeenCalledTimes(1);
+    expect(mockedApi.post).toHaveBeenCalledWith(
       expect.stringMatching(/\/v1\/auth\/logout\/$/),
       undefined,
       {
@@ -70,7 +85,7 @@ describe('useLogout hook', () => {
     );
   });
 
-  it('calls axios without Authorization header when there is no access token', async () => {
+  it('calls api without Authorization header when there is no access token', async () => {
     /* Arrange */
     const onSuccess = vi.fn();
     const onError = vi.fn();
@@ -78,7 +93,7 @@ describe('useLogout hook', () => {
     const fakeResponse: LogoutResponseDto = { success: true };
 
     mockedGetAccessToken.mockReturnValue(null);
-    mockedAxiosPost.mockResolvedValueOnce({ data: fakeResponse });
+    mockedApi.post.mockResolvedValueOnce({ data: fakeResponse });
 
     /* Act */
     renderWithProviders(<TestComponent onSuccess={onSuccess} onError={onError} />);
@@ -93,8 +108,8 @@ describe('useLogout hook', () => {
 
     expect(onError).not.toHaveBeenCalled();
 
-    expect(mockedAxiosPost).toHaveBeenCalledTimes(1);
-    expect(mockedAxiosPost).toHaveBeenCalledWith(
+    expect(mockedApi.post).toHaveBeenCalledTimes(1);
+    expect(mockedApi.post).toHaveBeenCalledWith(
       expect.stringMatching(/\/v1\/auth\/logout\/$/),
       undefined,
       {
@@ -112,7 +127,7 @@ describe('useLogout hook', () => {
     const error = new Error('Logout failed');
 
     mockedGetAccessToken.mockReturnValue('access-token-value');
-    mockedAxiosPost.mockRejectedValueOnce(error);
+    mockedApi.post.mockRejectedValueOnce(error);
 
     /* Act */
     renderWithProviders(<TestComponent onSuccess={onSuccess} onError={onError} />);

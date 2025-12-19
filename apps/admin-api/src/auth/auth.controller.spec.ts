@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { LoginDto } from '../dtos/login.dto';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -22,6 +23,14 @@ describe('AuthController', () => {
             login: jest.fn(),
             refresh: jest.fn(),
             logout: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigurationService,
+          useValue: {
+            getConfiguration: jest.fn().mockResolvedValue({
+              settings: {},
+            }),
           },
         },
       ],

@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 
 ### POST refresh token
-POST http://localhost:3000/v1/auth/refresh
+POST http://localhost:{{port}}/v1/auth/refresh
 x-refresh-token: {{refreshToken}}
 
 > {%
@@ -33,8 +33,19 @@ x-refresh-token: {{refreshToken}}
 %}
 ###
 
+### POST register (from registration form)
+POST http://localhost:{{port}}/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "laurie@sss.io",
+  "password": "so-secure!"
+}
+
+###
+
 ### POST logout
-POST http://localhost:3000/v1/auth/logout
+POST http://localhost:{{port}}/v1/auth/logout
 Authorization: Bearer {{token}}
 
 ###

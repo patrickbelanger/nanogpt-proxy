@@ -1,19 +1,22 @@
 import i18nTest from '../../../i18ntest.ts';
 import { describe, it, expect, beforeEach, vi, type MockedFunction } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import LoginForm from '../login-form.tsx';
-import { useLogin } from '../../../hooks/useLogin.ts';
 import { renderWithProviders } from '../../../__tests__/utilities/test.utilities.tsx';
+import { useLogin } from '../../../hooks/useLogin.ts';
+import LoginForm from '../login-form.tsx';
 
-vi.mock('../../../hooks/useLogin.ts');
+vi.mock('../../../hooks/useLogin.ts', () => ({
+  useLogin: vi.fn(),
+}));
 
 const mockedUseLogin = useLogin as unknown as MockedFunction<typeof useLogin>;
-
 type UseLoginResult = ReturnType<typeof useLogin>;
 
 describe('<LoginForm />', () => {
   beforeEach(async () => {
     await i18nTest.changeLanguage('en');
+
+    vi.clearAllMocks();
 
     mockedUseLogin.mockReturnValue({
       mutate: vi.fn(),
@@ -77,7 +80,7 @@ describe('<LoginForm />', () => {
 
   it('should display alert if login failed', () => {
     /* Arrange */
-    const error = new Error('Login failed');
+    const error = new Error('Login failed. Please try again.');
 
     mockedUseLogin.mockReturnValue({
       mutate: vi.fn(),
@@ -89,6 +92,6 @@ describe('<LoginForm />', () => {
     renderWithProviders(<LoginForm />);
 
     /* Assert */
-    expect(screen.getByText('Login failed')).toBeInTheDocument();
+    expect(screen.getByText('Login failed. Please try again.')).toBeInTheDocument();
   });
 });

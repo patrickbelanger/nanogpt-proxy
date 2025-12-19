@@ -1,7 +1,16 @@
 {
   "button": {
+    "back": {
+      "label": "Atrás"
+    },
+    "createAccount": {
+      "label": "Crear cuenta"
+    },
     "login": {
       "label": "Iniciar sesión"
+    },
+    "next": {
+      "label": "Siguiente"
     }
   },
   "input": {
@@ -16,11 +25,100 @@
       "label": "Contraseña",
       "placeholder": "Contraseña",
       "errors": {
-        "min": "La contraseña debe tener al menos 6 caracteres"
+        "min": "La contraseña debe tener al menos 6 caracteres",
+        "uppercase": "La contraseña debe contener al menos una letra mayúscula",
+        "lowercase": "La contraseña debe contener al menos una letra minúscula",
+        "special": "La contraseña debe contener al menos un carácter especial"
+      },
+      "rules": {
+        "length": "Al menos 6 caracteres",
+        "uppercase": "Al menos una letra mayúscula (A–Z)",
+        "lowercase": "Al menos una letra minúscula (a–z)",
+        "special": "Al menos un carácter especial (p. ej. ! @ # $ % & *)",
+        "noUsernamePart": "No debe contener tu nombre de usuario ni parte de tu correo electrónico"
+      },
+      "strength": {
+        "label": "Fortaleza de la contraseña",
+        "empty": "Sin definir",
+        "weak": "Débil",
+        "fair": "Aceptable",
+        "good": "Buena",
+        "strong": "Muy buena"
       }
     }
   },
   "login": {
-    "title": "¡Bienvenido de nuevo!"
+    "title": "¡Bienvenido de nuevo!",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "register": "Crear cuenta",
+    "registrationPendingReviewHint": "El registro de tu cuenta puede estar en revisión o sujeto a verificaciones adicionales.",
+    "errors": {
+      "invalidCredentials": "Combinación de correo electrónico y contraseña incorrecta.",
+      "forbidden": "No tiene los permisos necesarios para acceder a esta sección.",
+      "server": "Se ha producido un error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+      "generic": "El inicio de sesión ha fallado. Por favor, vuelva a intentarlo."
+    }
+  },
+  "footer": {
+    "authors": "Colaboradores de NanoGPT Proxy",
+    "allRightsReserved": "Todos los derechos reservados.",
+    "disclaimer": "Aviso legal: NanoGPT Proxy es un proyecto independiente y no está afiliado, asociado, respaldado ni patrocinado por NanoGPT. Todas las marcas y nombres de productos pertenecen a sus respectivos propietarios.",
+    "license": "Este proyecto está licenciado bajo la Lina Public License (LPL) v1.0."
+  },
+  "menu": {
+    "items": {
+      "administer": "Administrar",
+      "apiKey": "Clave API",
+      "profile": "Profile",
+      "settings": "Configuración",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "register": {
+    "status": {
+      "creating": "Creando tu cuenta...",
+      "pending": "Tu cuenta ha sido creada y está pendiente de revisión. Podrás iniciar sesión una vez que sea aprobada.",
+      "success": "Tu cuenta se ha creado correctamente. Iniciando sesión.."
+    },
+    "errors": {
+      "conflict": "No podemos crear esta cuenta en este momento. Verifique su información o inténtelo de nuevo más tarde.",
+      "forbidden": "No tiene los permisos necesarios para realizar esta acción.",
+      "server": "Se ha producido un error en el servidor. Inténtelo de nuevo más tarde.",
+      "generic": "El registro ha fallado. Inténtelo de nuevo."
+    },
+    "steps": {
+      "email": {
+        "label": "Correo electrónico",
+        "description": "Introduce tu dirección de correo electrónico"
+      },
+      "password": {
+        "label": "Contraseña",
+        "description": "Elige una contraseña segura"
+      }
+    },
+    "title": "Crea tu cuenta"
+  },
+  "settings": {
+    "groups": {
+      "login": {
+        "title": "Inicio de sesión y registro",
+        "description": "Administrar las funciones disponibles en las pantallas de inicio de sesión y registro."
+      }
+    },
+    "forgetPassword": {
+      "label": "¿Olvidaste tu contraseña?",
+      "description": "Permitir que los usuarios soliciten un restablecimiento de contraseña desde la pantalla de inicio de sesión."
+    },
+    "registration": {
+      "label": "Registro de usuarios",
+      "description": "Permitir que nuevos usuarios creen una cuenta desde la pantalla de inicio de sesión."
+    },
+    "reviewPendingRegistration": {
+      "label": "Revisar registros",
+      "description": "Las nuevas cuentas requieren aprobación manual antes de poder iniciar sesión."
+    },
+    "errors": {
+      "load": "No se pudo cargar la configuración."
+    }
   }
 }

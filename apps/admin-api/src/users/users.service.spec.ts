@@ -104,6 +104,8 @@ describe('UsersService', () => {
     expect(toNewUserEntity).toHaveBeenCalledWith(dto, {
       passwordHash: 'hashed-pass',
       apiKeyEncrypted: 'encrypted-key',
+      defaultRole: 'USER',
+      enabled: true,
     });
     expect(repo.saveUser).toHaveBeenCalledTimes(1);
     expect(maskEmail).toHaveBeenCalledWith(dto.email);

@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt, { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 import { EnvironmentService, RedisService } from '@nanogpt-monorepo/core';
 import { UserEntity } from '@nanogpt-monorepo/core/dist/entities/user-entity';
-import { JwtType } from '@nanogpt-monorepo/core/dist/enums/jwt-type';
+import { JWT_TYPE } from '@nanogpt-monorepo/core/dist/enums/jwt-type';
 import type { JwtAccessTokenPayload, JwtRefreshTokenPayload } from '@nanogpt-monorepo/core';
 
 const PREFIX = 'jwt:nanogpt';
@@ -20,7 +20,7 @@ export class TokenService {
       sub: user.email,
       r: [user.role],
       jti: randomUUID(),
-      type: JwtType.ACCESS,
+      type: JWT_TYPE.ACCESS,
     };
 
     return jwt.sign(payload, this.env.jwtSecret, {
@@ -29,20 +29,28 @@ export class TokenService {
   }
 
   verifyAccessToken(token: string): JwtAccessTokenPayload {
-    const payload = jwt.verify(token, this.env.jwtSecret) as JwtAccessTokenPayload;
+    try {
+      const payload = jwt.verify(token, this.env.jwtSecret) as JwtAccessTokenPayload;
 
-    if (payload.type !== JwtType.ACCESS) {
-      throw new BadRequestException('Invalid token type');
+      if (payload.type !== JWT_TYPE.ACCESS) {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      return payload;
+    } catch (err) {
+      if (err instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Token expired');
+      }
+
+      throw err;
     }
-
-    return payload;
   }
 
   async createRefreshToken(user: UserEntity): Promise<string> {
     const payload: JwtRefreshTokenPayload = {
       sub: user.email,
       jti: randomUUID(),
-      type: JwtType.REFRESH,
+      type: JWT_TYPE.REFRESH,
     };
 
     const options: SignOptions = {
@@ -59,7 +67,7 @@ export class TokenService {
 
   async verifyRefreshToken(token: string): Promise<JwtRefreshTokenPayload> {
     const payload = jwt.verify(token, this.env.jwtRefreshSecret) as JwtRefreshTokenPayload;
-    if (payload.type !== JwtType.REFRESH) {
+    if (payload.type !== JWT_TYPE.REFRESH) {
       throw new BadRequestException('Invalid token type');
     }
 
@@ -67,7 +75,7 @@ export class TokenService {
     const stored = await this.redis.get(key);
 
     if (!stored || stored !== token) {
-      throw new BadRequestException('Refresh token revoked or not found');
+      throw new UnauthorizedException('Refresh token revoked or not found');
     }
 
     return payload;

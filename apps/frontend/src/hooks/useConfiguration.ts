@@ -1,0 +1,54 @@
+import { API_BASE_URL } from '../apis/api.ts';
+import type { ConfigurationDto } from '../dtos/configuration.dto.ts';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAccessToken } from '../utilities/cookies.utilities.ts';
+import { api } from '../apis/axios-client.ts';
+
+async function fetchConfiguration(): Promise<ConfigurationDto> {
+  const { data } = await api.get<ConfigurationDto>(`${API_BASE_URL}/v1/configuration`, {
+    withCredentials: true,
+  });
+  return data;
+}
+
+async function updateConfiguration(payload: Partial<ConfigurationDto>): Promise<ConfigurationDto> {
+  const accessToken = getAccessToken();
+  if (!accessToken) {
+    throw new Error('No access token available. Please sign in again.');
+  }
+
+  const { data } = await api.put<ConfigurationDto>(`${API_BASE_URL}/v1/configuration`, payload, {
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return data;
+}
+
+export function useConfiguration() {
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ['configuration'],
+    queryFn: fetchConfiguration,
+  });
+
+  const mutation = useMutation({
+    mutationKey: ['configuration', 'update'],
+    mutationFn: (payload: Partial<ConfigurationDto>) => updateConfiguration(payload),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(['configuration'], updated);
+    },
+  });
+
+  return {
+    config: data,
+    isLoading: isLoading || isFetching,
+    error,
+    updateConfig: mutation.mutate,
+    updateConfigAsync: mutation.mutateAsync,
+    isUpdating: mutation.isPending,
+  };
+}
