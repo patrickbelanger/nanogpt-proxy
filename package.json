@@ -1,11 +1,12 @@
 {
   "name": "nanogpt-monorepo",
   "private": true,
-  "packageManager": "pnpm@10.26.0",
+  "packageManager": "pnpm@10.26.1",
   "license": "LPL-1.0",
   "scripts": {
     "install:pnpm": "npm install -g pnpm@latest-10",
     "bootstrap": "pnpm install",
+    "approve-build": "pnpm approve-builds",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
@@ -19,9 +20,10 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "class-validator": "^0.14.3",
+    "class-transformer": "^0.5.1",
     "eslint": "^9.39.1",
     "prettier": "^3.6.2",
-    "turbo": "^2.6.1",
+    "turbo": "^2.7.0",
     "typescript": "^5.9.3"
   },
   "paths": {
