@@ -19,6 +19,8 @@ jest.mock('@nanogpt-monorepo/core/dist/utilities/masking.utils', () => ({
 
 import { toNewUserEntity, toUpdatedUserEntity } from '../mappers/user.mapper';
 import { maskEmail } from '@nanogpt-monorepo/core/dist/utilities/masking.utils';
+import { mockUsers } from '../__tests__/user.dto.mock';
+import { PaginationQueryDto } from '@nanogpt-monorepo/core/dist/pagination/pagination-query.dto';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -257,15 +259,85 @@ describe('UsersService', () => {
     expect(maskEmail).toHaveBeenCalledWith(dto.email);
   });
 
-  it('getAll - delegate to UserRepository.getAllUsers', async () => {
-    const users: Omit<UserEntity, 'password'>[] = [
-      { email: 'a@example.com', api_key: 'x', enabled: true, role: 'USER' },
-    ];
-    repo.getAllUsers.mockResolvedValueOnce(users);
+  describe('listUsers', () => {
+    it('should return all users in a single page with default pagination', async () => {
+      /* Arrange */
+      repo.getAllUsers.mockResolvedValue(mockUsers);
 
-    const result = await service.getAll();
+      const query = {} as PaginationQueryDto;
 
-    expect(repo.getAllUsers).toHaveBeenCalled();
-    expect(result).toEqual(users);
+      /* Act */
+      const result = await service.listUsers(query);
+
+      /* Assert */
+      expect(repo.getAllUsers).toHaveBeenCalledTimes(1);
+
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(20);
+      expect(result.meta.totalItems).toBe(9);
+      expect(result.meta.totalPages).toBe(1);
+
+      expect(result.data).toHaveLength(9);
+
+      const emails = result.data.map((u) => u.email);
+      expect(emails).toEqual([
+        'admin@second-soul.io',
+        'ani@second-soul.io',
+        'anina@second-soul.io',
+        'brian@second-soul.io',
+        'chris@second-soul.io',
+        'jill@second-soul.io',
+        'lauren@second-soul.io',
+        'laurie@second-soul.io',
+        'patrick@second-soul.io',
+      ]);
+    });
+
+    it('should return the correct slice for page 2 with limit 3', async () => {
+      /* Arrange */
+      repo.getAllUsers.mockResolvedValue(mockUsers);
+
+      const query: PaginationQueryDto = {
+        page: 2,
+        limit: 3,
+      } as PaginationQueryDto;
+
+      /* Act */
+      const result = await service.listUsers(query);
+
+      /* Assert */
+      expect(repo.getAllUsers).toHaveBeenCalledTimes(1);
+
+      expect(result.meta.page).toBe(2);
+      expect(result.meta.limit).toBe(3);
+      expect(result.meta.totalItems).toBe(9);
+      expect(result.meta.totalPages).toBe(3);
+
+      const emails = result.data.map((u) => u.email);
+      expect(emails).toEqual([
+        'brian@second-soul.io',
+        'chris@second-soul.io',
+        'jill@second-soul.io',
+      ]);
+    });
+
+    it('should fallback to defaults when page/limit are invalid', async () => {
+      /* Arrange */
+      repo.getAllUsers.mockResolvedValue(mockUsers);
+
+      const query: any = {
+        page: 0,
+        limit: -10,
+      };
+
+      /* Act */
+      const result = await service.listUsers(query);
+
+      /* Assert */
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(20);
+      expect(result.meta.totalItems).toBe(9);
+      expect(result.meta.totalPages).toBe(1);
+    });
   });
 });

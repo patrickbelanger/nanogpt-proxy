@@ -13,7 +13,7 @@ describe('UsersController', () => {
 
   const usersServiceMock = {
     createUser: jest.fn(),
-    getAll: jest.fn(),
+    listUsers: jest.fn(),
     updateUser: jest.fn(),
     upsertKey: jest.fn(),
     deleteUser: jest.fn(),
