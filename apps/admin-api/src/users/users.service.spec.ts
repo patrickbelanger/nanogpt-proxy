@@ -264,7 +264,7 @@ describe('UsersService', () => {
       /* Arrange */
       repo.getAllUsers.mockResolvedValue(mockUsers);
 
-      const query = {} as PaginationQueryDto; // aucun page/limit => défauts
+      const query = {} as PaginationQueryDto;
 
       /* Act */
       const result = await service.listUsers(query);
