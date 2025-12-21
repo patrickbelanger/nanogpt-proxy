@@ -7,6 +7,10 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { SecurityService } from '../security/security.service';
 import { maskEmail } from '@nanogpt-monorepo/core/dist/utilities/masking.utils';
 import { toNewUserEntity, toUpdatedUserEntity } from '../mappers/user.mapper';
+import { PaginationQueryDto } from '@nanogpt-monorepo/core/dist/pagination/pagination-query.dto';
+import { PageDto } from '@nanogpt-monorepo/core/dist/pagination/page.dto';
+import { PageMetaDto } from '@nanogpt-monorepo/core/dist/pagination/page-meta.dto';
+import { UsersDto } from '../dtos/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -89,8 +93,29 @@ export class UsersService {
     this.logger.log(`Upsert apikey for user: ${maskEmail(dto.email)}`);
   }
 
-  async getAll(): Promise<Omit<UserEntity, 'password'>[]> {
-    return this.users.getAllUsers();
+  async listUsers(query: PaginationQueryDto): Promise<PageDto<UsersDto>> {
+    const page = query.page && Number.isFinite(+query.page) && query.page > 0 ? query.page : 1;
+
+    const limit =
+      query.limit && Number.isFinite(+query.limit) && query.limit > 0 ? query.limit : 20;
+
+    const allUsers = await this.users.getAllUsers();
+    const totalItems = allUsers.length;
+
+    const sorted = [...allUsers].sort((a, b) =>
+      a.email.localeCompare(b.email, 'en', { sensitivity: 'base' }),
+    );
+
+    const offset = (page - 1) * limit;
+    const pageData = sorted.slice(offset, offset + limit);
+
+    const meta = new PageMetaDto({
+      page,
+      limit,
+      totalItems,
+    });
+
+    return new PageDto<UsersDto>(pageData, meta);
   }
 
   private isAdmin(userEntity: UserEntity, email: string): boolean {

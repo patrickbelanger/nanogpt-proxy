@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { UsersService } from './users.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -6,6 +6,9 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { DeleteUserDto } from '../dtos/delete-user.dto';
+import { PaginationQueryDto } from '@nanogpt-monorepo/core/dist/pagination/pagination-query.dto';
+import { PageDto } from '@nanogpt-monorepo/core/dist/pagination/page.dto';
+import { UsersDto } from '../dtos/users.dto';
 
 @Controller('v1/users')
 @UseGuards(JwtAuthGuard)
@@ -22,8 +25,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get()
-  async listUsers() {
-    return this.users.getAll();
+  async listUsers(@Query() query: PaginationQueryDto): Promise<PageDto<UsersDto>> {
+    return this.users.listUsers(query);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

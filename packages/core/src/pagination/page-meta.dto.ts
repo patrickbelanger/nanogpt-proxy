@@ -8,6 +8,8 @@ export class PageMetaDto {
     this.page = page;
     this.limit = limit;
     this.totalItems = totalItems;
-    this.totalPages = Math.ceil(totalItems / limit);
+
+    const safeLimit = limit && limit > 0 ? limit : totalItems || 1;
+    this.totalPages = Math.ceil(totalItems / safeLimit);
   }
 }
