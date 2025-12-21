@@ -6,10 +6,10 @@ import { PaginatedTable } from '../elements/tables/paginated-table';
 import type { PaginationParams, PageDto } from '../elements/tables/pagination-types';
 import type { UsePageQuery } from '../../hooks/usePageQuery';
 import { fetchUsersPage } from '../../apis/users-api';
+import { getAccessToken } from '../../utilities/cookies.utilities.ts';
+import { API_BASE_URL } from '../../apis/api.ts';
 
 type UsersTableProps = {
-  baseUrl: string;
-  token: string;
   onEditUser?: (user: UsersDto) => void;
   onDeleteUser?: (user: UsersDto) => void;
   onBulkDisable?: (users: UsersDto[]) => void;
@@ -17,7 +17,7 @@ type UsersTableProps = {
 };
 
 function UsersTable(props: UsersTableProps) {
-  const { baseUrl, token, onEditUser, onDeleteUser, onBulkDisable, onBulkEnable } = props;
+  const { onEditUser, onDeleteUser, onBulkDisable, onBulkEnable } = props;
 
   const columns: ColumnDef<UsersDto>[] = [
     {
@@ -63,7 +63,15 @@ function UsersTable(props: UsersTableProps) {
   const useUsersPage: UsePageQuery<UsersDto> = (params: PaginationParams) =>
     useQuery<PageDto<UsersDto>, Error>({
       queryKey: ['users', params],
-      queryFn: () => fetchUsersPage(baseUrl, token, params),
+      queryFn: () => {
+        const token = getAccessToken();
+
+        if (!token) {
+          throw new Error('Missing access token');
+        }
+
+        return fetchUsersPage(API_BASE_URL, token, params);
+      },
       placeholderData: (prevData) => prevData,
     });
 
