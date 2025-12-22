@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { type ReactNode, useMemo, useState } from 'react';
 import {
   Box,
   Table,
@@ -16,6 +16,7 @@ import { IconArrowDown, IconArrowUp, IconArrowsSort } from '@tabler/icons-react'
 import type { PaginationParams, SortDir } from './pagination-types';
 import type { ColumnDef } from './column-def';
 import type { PaginatedTableProps } from './paginated-table-props';
+import { useTranslation } from 'react-i18next';
 
 export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
   const {
@@ -31,8 +32,8 @@ export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
   const [limit] = useState(initialLimit);
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortDir, setSortDir] = useState<SortDir | undefined>(undefined);
-
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const { t } = useTranslation();
 
   const queryParams: PaginationParams = {
     page,
@@ -178,7 +179,7 @@ export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
                   <Group justify="center" py="md">
                     <Loader size="sm" />
                     <Text size="sm" c="dimmed">
-                      Loading...
+                      {t('tables.common.labels.loading')}
                     </Text>
                   </Group>
                 </Table.Td>
@@ -200,7 +201,7 @@ export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
               <Table.Tr>
                 <Table.Td colSpan={columns.length + (renderActions ? 2 : 1)}>
                   <Text size="sm" c="dimmed">
-                    No data to display.
+                    {t('tables.common.labels.noDataToDisplay')}
                   </Text>
                 </Table.Td>
               </Table.Tr>
@@ -221,7 +222,7 @@ export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
 
                     {columns.map((col) => (
                       <Table.Td key={String(col.key)}>
-                        {col.render ? col.render(row) : (row[col.key] as React.ReactNode)}
+                        {col.render ? col.render(row) : (row[col.key] as ReactNode)}
                       </Table.Td>
                     ))}
 
@@ -241,21 +242,22 @@ export function PaginatedTable<T>(props: PaginatedTableProps<T>) {
               Page {meta?.page ?? page} / {meta?.totalPages ?? '-'}
             </Text>
             <Text size="sm" c="dimmed">
-              {meta?.totalItems ?? 0} item(s) total
+              {meta?.totalItems ?? 0} {t('tables.common.labels.itemsTotal')}
             </Text>
-            {isFetching && !isLoading && <Loader size="xs" ml="xs" aria-label="Refreshing data" />}
+            {isFetching && !isLoading && (
+              <Loader size="xs" ml="xs" aria-label={t('tables.common.labels.refreshingData')} />
+            )}
           </Group>
 
           {meta && meta.totalPages > 1 && (
             <Pagination total={meta.totalPages} value={page} onChange={setPage} size="sm" />
           )}
+          {selectedIds.size === 0
+            ? `${t('tables.common.labels.noItemSelected')}`
+            : `${selectedIds.size} ${t('tables.common.labels.itemsSelected')}`}
         </Flex>
 
         <Flex justify="space-between" align="center" mt="sm" gap="md" wrap="wrap">
-          <Text size="sm">
-            {selectedIds.size === 0 ? 'No item selected' : `${selectedIds.size} item(s) selected`}
-          </Text>
-
           {renderBottomBar && selectedRows.length > 0 && (
             <Group gap="xs">{renderBottomBar(selectedRows)}</Group>
           )}

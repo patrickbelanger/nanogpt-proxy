@@ -122,5 +122,39 @@
     "errors": {
       "load": "Konfiguration konnte nicht geladen werden."
     }
+  },
+  "tables": {
+    "administer": {
+      "buttons": {
+        "enableSelected": "Ausgewählte aktivieren",
+        "disableSelected": "Ausgewählte deaktivieren"
+      },
+      "columns": {
+        "email": "E-Mail",
+        "role": "Rolle",
+        "enabled": "Aktiv",
+        "apiKey": "API-Schlüssel",
+        "actions": "Aktionen"
+      },
+      "labels": {
+        "admin": "ADMIN",
+        "user": "BENUTZER",
+        "disabled": "DEAKTIVIERT",
+        "enabled": "AKTIVIERT",
+        "none": "Keine"
+      }
+    },
+    "common": {
+      "labels": {
+        "page": "Seite",
+        "itemsSelected": "ausgewählte(s) Element(e)",
+        "itemsTotal": "Element(e) insgesamt",
+        "loading": "Wird geladen...",
+        "noDataToDisplay": "Keine Daten zum Anzeigen.",
+        "noItemSelected": "Kein Element ausgewählt",
+        "refreshingData": "Daten werden aktualisiert"
+      }
+    }
   }
+
 }

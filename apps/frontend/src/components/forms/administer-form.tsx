@@ -2,9 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { Group, Title } from '@mantine/core';
 import { IconUsersPlus } from '@tabler/icons-react';
 import UsersTable from '../customs/users-table.tsx';
+import { useUser } from '../../hooks/useUser.ts';
 
 function AdministerForm() {
   const { t } = useTranslation();
+  const { toggleEnabled } = useUser();
 
   return (
     <>
@@ -15,7 +17,7 @@ function AdministerForm() {
       <UsersTable
         onApproveDisapproveUser={(user) => {
           console.info('Approve/DisapproveUser ' + user);
-          // ouvrir un drawer / modal avec le user
+          toggleEnabled(user);
         }}
         onEditUser={(user) => {
           console.info('Edit ' + user);

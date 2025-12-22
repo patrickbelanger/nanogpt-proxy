@@ -120,5 +120,39 @@
     "errors": {
       "load": "Impossible de charger la configuration."
     }
+  },
+  "tables": {
+    "administer": {
+      "buttons": {
+        "enableSelected": "Activer les éléments sélectionnés",
+        "disableSelected": "Désactiver les éléments sélectionnés"
+      },
+      "columns": {
+        "email": "Courriel",
+        "role": "Rôle",
+        "enabled": "Activé",
+        "apiKey": "Clé API",
+        "actions": "Actions"
+      },
+      "labels": {
+        "admin": "ADMIN",
+        "user": "UTILISATEUR",
+        "disabled": "DÉSACTIVÉ",
+        "enabled": "ACTIVÉ",
+        "none": "Aucune"
+      }
+    },
+    "common": {
+      "labels": {
+        "page": "Page",
+        "itemsSelected": "élément(s) sélectionné(s)",
+        "itemsTotal": "élément(s) au total",
+        "loading": "Chargement...",
+        "noDataToDisplay": "Aucune donnée à afficher.",
+        "noItemSelected": "Aucun élément sélectionné",
+        "refreshingData": "Actualisation des données"
+      }
+    }
   }
+
 }
