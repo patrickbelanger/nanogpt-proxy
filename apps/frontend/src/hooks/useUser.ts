@@ -5,6 +5,10 @@ import { api } from '../apis/axios-client.ts';
 import type { UserRole, UsersDto } from '../dtos/users.dto';
 import type { PageDto } from '../components/elements/tables/pagination-types.ts';
 
+export type DeleteUserPayload = {
+  email: string;
+};
+
 export type UpdateUserPayload = {
   email: string;
   password?: string;
@@ -12,6 +16,22 @@ export type UpdateUserPayload = {
   role?: UserRole;
   enabled?: boolean;
 };
+
+async function deleteUser(payload: DeleteUserPayload): Promise<void> {
+  const token = getAccessToken();
+
+  if (!token) {
+    throw new Error('Missing access token');
+  }
+
+  await api.delete<void>(`${API_BASE_URL}/v1/users`, {
+    data: payload,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
 async function putUser(payload: UpdateUserPayload): Promise<UsersDto> {
   const token = getAccessToken();
@@ -73,6 +93,31 @@ export function useUser() {
     },
   });
 
+  const deleteMutation = useMutation<void, Error, DeleteUserPayload>({
+    mutationFn: deleteUser,
+    async onSuccess(_, payload) {
+      queryClient.setQueriesData<PageDto<UsersDto>>(
+        { queryKey: ['users'], exact: false },
+        (old) => {
+          if (!old) {
+            return old;
+          }
+
+          const newData = old.data.filter((u) => u.email !== payload.email);
+
+          return {
+            ...old,
+            data: newData,
+            meta: {
+              ...old.meta,
+              totalItems: old.meta.totalItems - 1,
+            },
+          };
+        },
+      );
+    },
+  });
+
   const bulkMutation = useMutation<UsersDto[], Error, UpdateUserPayload[]>({
     mutationFn: putUsers,
     async onSuccess(_, payload) {
@@ -92,9 +137,10 @@ export function useUser() {
             ...old,
             data: old.data.map((u) => {
               const patch = patchByEmail.get(u.email);
-              if (!patch) return u;
+              if (!patch) {
+                return u;
+              }
 
-              // on applique seulement les champs présents dans le payload
               return {
                 ...u,
                 ...(patch.role !== undefined ? { role: patch.role } : null),
@@ -143,6 +189,7 @@ export function useUser() {
   return {
     updateUser: mutation.mutate,
     updateUserAsync: mutation.mutateAsync,
+    deleteUser: deleteMutation.mutate,
     bulkEnable,
     bulkDisable,
     toggleEnabled,

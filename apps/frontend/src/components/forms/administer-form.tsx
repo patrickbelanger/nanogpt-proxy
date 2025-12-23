@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 function AdministerForm() {
   const { t } = useTranslation();
-  const { bulkDisable, bulkEnable, toggleEnabled } = useUser();
+  const { bulkDisable, bulkEnable, deleteUser, toggleEnabled } = useUser();
   const [editUserOpened, { open: openEditUser, close: closeEditUser }] = useDisclosure(false);
   const [editingUser, setEditingUser] = useState<UsersDto | null>(null);
 
@@ -32,7 +32,7 @@ function AdministerForm() {
         }}
         onDeleteUser={(user) => {
           console.info('Delete ' + user);
-          // ouvrir un confirm, puis call delete endpoint
+          deleteUser({ email: user.email });
         }}
         onBulkEnable={(users) => {
           bulkEnable(users);
