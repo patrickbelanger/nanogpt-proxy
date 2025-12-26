@@ -127,7 +127,8 @@
     "administer": {
       "buttons": {
         "enableSelected": "Ausgewählte aktivieren",
-        "disableSelected": "Ausgewählte deaktivieren"
+        "disableSelected": "Ausgewählte deaktivieren",
+        "addUser": "Benutzer hinzufügen"
       },
       "columns": {
         "email": "E-Mail",

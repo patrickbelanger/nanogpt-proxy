@@ -7,11 +7,13 @@ import { useDisclosure } from '@mantine/hooks';
 import { UserEditModal } from './modals/user-edit-modal.tsx';
 import type { UsersDto } from '../../dtos/users.dto.ts';
 import { useState } from 'react';
+import { UserCreateModal } from './modals/user-create-modal.tsx';
 
 function AdministerForm() {
   const { t } = useTranslation();
   const { bulkDisable, bulkEnable, deleteUser, toggleEnabled } = useUser();
   const [editUserOpened, { open: openEditUser, close: closeEditUser }] = useDisclosure(false);
+  const [createUserOpened, createUserHandlers] = useDisclosure(false);
   const [editingUser, setEditingUser] = useState<UsersDto | null>(null);
 
   return (
@@ -21,6 +23,7 @@ function AdministerForm() {
         <Title order={3}>{t('menu.items.administer')}</Title>
       </Group>
       <UsersTable
+        onAddUser={createUserHandlers.open}
         onApproveDisapproveUser={(user) => {
           console.info('Approve/DisapproveUser ' + user);
           toggleEnabled(user);
@@ -50,6 +53,8 @@ function AdministerForm() {
           setEditingUser(null);
         }}
       />
+
+      <UserCreateModal opened={createUserOpened} onClose={createUserHandlers.close} />
     </>
   );
 }

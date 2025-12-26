@@ -1,4 +1,4 @@
-import { Badge, Button, Group, Text, Tooltip, UnstyledButton } from '@mantine/core';
+import { Badge, Box, Button, Group, Text, Tooltip, UnstyledButton } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { PaginatedTable } from '../elements/tables/paginated-table';
 import { fetchUsersPage } from '../../apis/users-api';
@@ -17,10 +17,18 @@ type UsersTableProps = {
   onDeleteUser?: (user: UsersDto) => void;
   onBulkDisable?: (users: UsersDto[]) => void;
   onBulkEnable?: (users: UsersDto[]) => void;
+  onAddUser?: () => void;
 };
 
 function UsersTable(props: UsersTableProps) {
-  const { onApproveDisapproveUser, onEditUser, onDeleteUser, onBulkDisable, onBulkEnable } = props;
+  const {
+    onApproveDisapproveUser,
+    onEditUser,
+    onDeleteUser,
+    onBulkDisable,
+    onBulkEnable,
+    onAddUser,
+  } = props;
   const { t } = useTranslation();
 
   const columns: ColumnDef<UsersDto>[] = [
@@ -34,11 +42,16 @@ function UsersTable(props: UsersTableProps) {
       header: t('tables.administer.columns.role'),
       width: 120,
       sortable: true,
-      render: (row) => (
-        <Badge color={row.role === 'ADMIN' ? 'red' : 'blue'} variant="light">
-          {t(`tables.administer.labels.${row.role.toLowerCase()}`)}
-        </Badge>
-      ),
+      render: (row) => {
+        const rawRole = row.role ?? 'USER';
+        const roleKey = rawRole.toLowerCase();
+
+        return (
+          <Badge color={rawRole === 'ADMIN' ? 'red' : 'blue'} variant="light">
+            {t(`tables.administer.labels.${roleKey}`)}
+          </Badge>
+        );
+      },
     },
     {
       key: 'enabled',
@@ -84,85 +97,105 @@ function UsersTable(props: UsersTableProps) {
     });
 
   return (
-    <PaginatedTable<UsersDto>
-      getRowId={(u) => u.email}
-      columns={columns}
-      initialLimit={10}
-      usePageQuery={useUsersPage}
-      renderActions={(row) => (
-        <Group>
-          {onApproveDisapproveUser && (
-            <UnstyledButton
-              size="xs"
-              onClick={() => onApproveDisapproveUser(row)}
-              disabled={row.role === 'ADMIN'}
-              style={{
-                cursor: row.role === 'ADMIN' ? 'not-allowed' : 'pointer',
-                opacity: row.role === 'ADMIN' ? 0.5 : 1,
-              }}
-            >
-              <Tooltip
-                arrowOffset={50}
-                arrowSize={8}
-                label={row.enabled ? 'Disable user' : 'Enable user'}
-                withArrow
-                position="bottom"
+    <>
+      <Box mb="sm" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {onAddUser && (
+          <Button size="xs" onClick={onAddUser}>
+            {t('tables.administer.buttons.addUser')}
+          </Button>
+        )}
+      </Box>
+      <PaginatedTable<UsersDto>
+        getRowId={(u) => u.email}
+        columns={columns}
+        initialLimit={10}
+        usePageQuery={useUsersPage}
+        renderActions={(row) => (
+          <Group>
+            {onApproveDisapproveUser && (
+              <UnstyledButton
+                size="xs"
+                onClick={() => onApproveDisapproveUser(row)}
+                disabled={row.role === 'ADMIN'}
+                style={{
+                  cursor: row.role === 'ADMIN' ? 'not-allowed' : 'pointer',
+                  opacity: row.role === 'ADMIN' ? 0.5 : 1,
+                }}
               >
-                {row.enabled ? <IconUserX /> : <IconUserCheck />}
-              </Tooltip>
-            </UnstyledButton>
-          )}
-          {onEditUser && (
-            <UnstyledButton size="xs" onClick={() => onEditUser(row)}>
-              <Tooltip arrowOffset={50} arrowSize={8} label="Edit user" withArrow position="bottom">
-                <IconEdit />
-              </Tooltip>
-            </UnstyledButton>
-          )}
+                <Tooltip
+                  arrowOffset={50}
+                  arrowSize={8}
+                  label={row.enabled ? 'Disable user' : 'Enable user'}
+                  withArrow
+                  position="bottom"
+                >
+                  {row.enabled ? <IconUserX /> : <IconUserCheck />}
+                </Tooltip>
+              </UnstyledButton>
+            )}
+            {onEditUser && (
+              <UnstyledButton size="xs" onClick={() => onEditUser(row)}>
+                <Tooltip
+                  arrowOffset={50}
+                  arrowSize={8}
+                  label="Edit user"
+                  withArrow
+                  position="bottom"
+                >
+                  <IconEdit />
+                </Tooltip>
+              </UnstyledButton>
+            )}
 
-          {onDeleteUser && (
-            <UnstyledButton
-              size="xs"
-              onClick={() => onDeleteUser(row)}
-              disabled={row.role === 'ADMIN'}
-              style={{
-                cursor: row.role === 'ADMIN' ? 'not-allowed' : 'pointer',
-                opacity: row.role === 'ADMIN' ? 0.5 : 1,
-              }}
-            >
-              <Tooltip
-                arrowOffset={50}
-                arrowSize={8}
-                label="Delete user"
-                withArrow
-                position="bottom"
+            {onDeleteUser && (
+              <UnstyledButton
+                size="xs"
+                onClick={() => onDeleteUser(row)}
+                disabled={row.role === 'ADMIN'}
+                style={{
+                  cursor: row.role === 'ADMIN' ? 'not-allowed' : 'pointer',
+                  opacity: row.role === 'ADMIN' ? 0.5 : 1,
+                }}
               >
-                <IconTrash />
-              </Tooltip>
-            </UnstyledButton>
-          )}
-        </Group>
-      )}
-      renderBottomBar={(selected) => (
-        <>
-          {onBulkEnable && (
-            <Button size="xs" variant="light" color="green" onClick={() => onBulkEnable(selected)}>
-              {t('tables.administer.buttons.enableSelected')}
-            </Button>
-          )}
-          {onBulkDisable && (
-            <Button
-              size="xs"
-              variant="light"
-              color="orange"
-              onClick={() => onBulkDisable(selected)}
-            >
-              {t('tables.administer.buttons.disableSelected')}
-            </Button>
-          )}
-        </>
-      )}
-    />
+                <Tooltip
+                  arrowOffset={50}
+                  arrowSize={8}
+                  label="Delete user"
+                  withArrow
+                  position="bottom"
+                >
+                  <IconTrash />
+                </Tooltip>
+              </UnstyledButton>
+            )}
+          </Group>
+        )}
+        renderBottomBar={(selected) => (
+          <>
+            {onBulkEnable && (
+              <Button
+                size="xs"
+                variant="light"
+                color="green"
+                onClick={() => onBulkEnable(selected)}
+              >
+                {t('tables.administer.buttons.enableSelected')}
+              </Button>
+            )}
+            {onBulkDisable && (
+              <Button
+                size="xs"
+                variant="light"
+                color="orange"
+                onClick={() => onBulkDisable(selected)}
+              >
+                {t('tables.administer.buttons.disableSelected')}
+              </Button>
+            )}
+          </>
+        )}
+      />
+    </>
   );
 }
 

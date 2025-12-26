@@ -121,11 +121,33 @@
       "load": "No se pudo cargar la configuración."
     }
   },
+  "modals": {
+    "createUpdateUser": {
+      "apiKey": {
+        "label": "Clave API",
+        "placeholder": "UUID v4 opcional"
+      },
+      "email": {
+        "label": "Correo electrónico"
+      },
+      "enabled": {
+        "label": "Activado"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Definir una contraseña inicial"
+      },
+      "role": {
+        "label": "Rol"
+      }
+    }
+  },
   "tables": {
     "administer": {
       "buttons": {
         "enableSelected": "Habilitar seleccionados",
-        "disableSelected": "Deshabilitar seleccionados"
+        "disableSelected": "Deshabilitar seleccionados",
+        "addUser": "Agregar usuario"
       },
       "columns": {
         "email": "Correo electrónico",

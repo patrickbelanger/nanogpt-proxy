@@ -1,11 +1,14 @@
 import type { UsersDto, UserRole } from '../../../dtos/users.dto';
 import type { UserEditFormValues } from './user-edit-modal';
 import type { FieldConfig } from '../fields/field-config';
-
 export type UserFormMode = 'create' | 'edit';
 
+type TFn = (key: string) => string;
+
 function isUuidV4(value: string): boolean {
-  if (!value) return true; // vide = OK (pas de changement)
+  if (!value) {
+    return true;
+  }
   const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidV4Regex.test(value);
 }
@@ -30,58 +33,64 @@ export function buildInitialValues(user: UsersDto | null, mode: UserFormMode): U
   };
 }
 
-export function buildUserFields(mode: UserFormMode): FieldConfig<UserEditFormValues>[] {
+export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserEditFormValues>[] {
   const isEdit = mode === 'edit';
 
   return [
     {
       key: 'enabled',
-      label: 'Enabled',
+      label: t('modals.createUpdateUser.enabled.label'),
       type: 'toggle',
     },
     {
       key: 'email',
-      label: 'Email',
+      label: t('modals.createUpdateUser.email.label'),
       type: 'text',
       required: true,
       disabled: isEdit,
       validate: (value) => {
         if (!value) {
-          return 'Email is required';
+          return t('modals.createUpdateUser.email.requiredError');
+          //return 'Email is required';
         }
         return null;
       },
     },
     {
       key: 'password',
-      label: 'Password',
+      label: t('modals.createUpdateUser.password.label'),
       type: 'password',
-      placeholder: isEdit ? 'Leave empty to keep current password' : 'Set an initial password',
+      placeholder: isEdit
+        ? t('modals.createUpdateUser.password.placeholderEdit')
+        : t('modals.createUpdateUser.password.placeholder'),
+      //placeholder: isEdit ? 'Leave empty to keep current password' : 'Set an initial password',
       required: !isEdit,
       validate: (value) => {
         if (!isEdit && !value) {
-          return 'Password is required';
+          return t('modals.createUpdateUser.password.requiredError');
         }
         return null;
       },
     },
     {
       key: 'api_key',
-      label: 'API Key',
+      label: t('modals.createUpdateUser.apiKey.label'),
       type: 'password',
-      placeholder: 'Optional UUID v4',
+      placeholder: t('modals.createUpdateUser.apiKey.placeholder'),
       required: false,
       validate: (value) => {
-        if (!value) return null;
+        if (!value) {
+          return null;
+        }
         if (!isUuidV4(value)) {
-          return 'API key must be a valid UUID v4';
+          return t('modals.createUpdateUser.apiKey.invalid');
         }
         return null;
       },
     },
     {
       key: 'role',
-      label: 'Role',
+      label: t('modals.createUpdateUser.role.label'),
       type: 'select',
       required: true,
       options: [

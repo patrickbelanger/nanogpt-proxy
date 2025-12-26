@@ -9,6 +9,14 @@ export type DeleteUserPayload = {
   email: string;
 };
 
+export type CreateUserPayload = {
+  email: string;
+  password: string;
+  api_key?: string;
+  role: UserRole;
+  enabled: boolean;
+};
+
 export type UpdateUserPayload = {
   email: string;
   password?: string;
@@ -26,6 +34,20 @@ async function deleteUser(payload: DeleteUserPayload): Promise<void> {
 
   await api.delete<void>(`${API_BASE_URL}/v1/users`, {
     data: payload,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+async function postUser(payload: CreateUserPayload): Promise<void> {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error('Missing access token');
+  }
+
+  await api.post(`${API_BASE_URL}/v1/users`, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -86,6 +108,16 @@ export function useUser() {
         },
       );
 
+      await queryClient.invalidateQueries({
+        queryKey: ['users'],
+        refetchType: 'active',
+      });
+    },
+  });
+
+  const createMutation = useMutation<void, Error, CreateUserPayload>({
+    mutationFn: postUser,
+    async onSuccess() {
       await queryClient.invalidateQueries({
         queryKey: ['users'],
         refetchType: 'active',
@@ -187,9 +219,12 @@ export function useUser() {
   };
 
   return {
+    createUser: createMutation.mutate,
+    createUserAsync: createMutation.mutateAsync,
+    isCreating: createMutation.isPending,
+    deleteUser: deleteMutation.mutate,
     updateUser: mutation.mutate,
     updateUserAsync: mutation.mutateAsync,
-    deleteUser: deleteMutation.mutate,
     bulkEnable,
     bulkDisable,
     toggleEnabled,
