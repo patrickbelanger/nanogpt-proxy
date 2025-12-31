@@ -28,7 +28,7 @@ export function UserCreateModal(props: UserCreateModalProps) {
 
   const fields: FieldConfig<UserCreateFormValues>[] = useMemo(
     () => buildUserFields('create', t),
-    [],
+    [t],
   );
 
   const handleSubmit = async (values: UserCreateFormValues) => {

@@ -11,7 +11,7 @@ import {
 import { useForm } from '@mantine/form';
 import type { FieldConfig } from '../fields/field-config.ts';
 
-export type DynamicFormModalProps<T extends Record<string, any>> = {
+export type DynamicFormModalProps<T extends Record<string, unknown>> = {
   opened: boolean;
   title: string;
   initialValues: T;
@@ -21,23 +21,26 @@ export type DynamicFormModalProps<T extends Record<string, any>> = {
   onCancel: () => void;
 };
 
-export function DynamicFormModal<T extends Record<string, any>>(props: DynamicFormModalProps<T>) {
+export function DynamicFormModal<T extends Record<string, unknown>>(
+  props: DynamicFormModalProps<T>,
+) {
   const { opened, title, initialValues, fields, loading, onSubmit, onCancel } = props;
 
   const form = useForm<T>({
     initialValues,
     validate: (values) => {
-      const errors: Partial<Record<keyof T, string | null>> = {};
+      const errors: Partial<Record<keyof T, string>> = {};
 
       fields.forEach((field) => {
         if (!field.validate) {
           return;
         }
 
-        const value = values[field.key];
+        const key = field.key;
+        const value = values[key]; // type: T[typeof key]
         const error = field.validate(value, values);
         if (error) {
-          errors[field.key] = error;
+          errors[key] = error;
         }
       });
 
