@@ -30,7 +30,9 @@ export function UserEditModal(props: UserEditModalProps) {
   const fields: FieldConfig<UserEditFormValues>[] = useMemo(() => buildUserFields('edit', t), []);
 
   const handleSubmit = async (values: UserEditFormValues) => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     await updateUserAsync({
       email: user.email,
