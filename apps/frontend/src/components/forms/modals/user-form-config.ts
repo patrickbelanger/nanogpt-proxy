@@ -1,6 +1,7 @@
 import type { UsersDto, UserRole } from '../../../dtos/users.dto';
 import type { UserEditFormValues } from './user-edit-modal';
 import type { FieldConfig } from '../fields/field-config';
+
 export type UserFormMode = 'create' | 'edit';
 
 type TFn = (key: string) => string;
@@ -79,10 +80,11 @@ export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserEdi
       placeholder: t('modals.createUpdateUser.apiKey.placeholder'),
       required: false,
       validate: (value) => {
-        if (!value) {
+        const v = typeof value === 'string' ? value : '';
+        if (!v) {
           return null;
         }
-        if (!isUuidV4(value)) {
+        if (!isUuidV4(v)) {
           return t('modals.createUpdateUser.apiKey.invalid');
         }
         return null;
