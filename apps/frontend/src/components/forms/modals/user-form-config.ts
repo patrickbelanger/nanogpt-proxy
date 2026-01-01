@@ -1,5 +1,4 @@
 import type { UserDto, UserRole } from '../../../dtos/userDto.ts';
-import type { UserEditFormValues } from './user-edit-modal';
 import type { FieldConfig } from '../fields/field-config';
 
 export type UserFormMode = 'create' | 'edit';
@@ -14,7 +13,7 @@ function isUuidV4(value: string): boolean {
   return uuidV4Regex.test(value);
 }
 
-export function buildInitialValues(user: UserDto | null, mode: UserFormMode): UserEditFormValues {
+export function buildInitialValues(user: UserDto | null, mode: UserFormMode): UserDto {
   if (mode === 'edit' && user) {
     return {
       enabled: user.enabled,
@@ -34,7 +33,7 @@ export function buildInitialValues(user: UserDto | null, mode: UserFormMode): Us
   };
 }
 
-export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserEditFormValues>[] {
+export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserDto>[] {
   const isEdit = mode === 'edit';
 
   return [
