@@ -1,12 +1,15 @@
 import '@testing-library/jest-dom/vitest';
 import React from 'react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { screen, fireEvent } from '@testing-library/react';
-
-import UsersTable from '../users-table.tsx';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
+import { screen, fireEvent, within } from '@testing-library/react';
 import type { UserDto } from '../../../dtos/userDto.ts';
 import type { ColumnDef } from '../../elements/tables/column-def.ts';
 import { renderWithProviders } from '../../../__tests__/utilities/test.utilities.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { getAccessToken } from '../../../utilities/cookies.utilities.ts';
+import { fetchUsersPage } from '../../../apis/users-api';
+import UsersTable from '../users-table.tsx';
+
 import i18nTest from '../../../i18ntest.ts';
 
 type PaginatedTableMockProps<T> = {
@@ -30,13 +33,48 @@ const sampleRow: UserDto = {
 
 const selectedRows: UserDto[] = [sampleRow];
 
-vi.mock('../../elements/tables/paginated-table.tsx', () => ({
+vi.mock('@tanstack/react-query', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tanstack/react-query')>();
+
+  return {
+    ...actual,
+    useQuery: vi.fn(),
+  };
+});
+
+vi.mock('../../../utilities/cookies.utilities.ts', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../utilities/cookies.utilities.ts')>();
+
+  return {
+    __esModule: true,
+    ...actual,
+    getAccessToken: vi.fn(),
+    getRefreshToken: vi.fn(),
+  };
+});
+
+vi.mock('../../../apis/users-api', () => ({
+  __esModule: true,
+  fetchUsersPage: vi.fn(),
+}));
+
+vi.mock('../../elements/tables/paginated-table', () => ({
   __esModule: true,
   PaginatedTable: (props: PaginatedTableMockProps<UserDto>) => {
     latestPaginatedProps = props;
-    return <div data-testid="paginated-table-mock" />;
+
+    return (
+      <div data-testid="paginated-table-mock">
+        <div data-testid="actions-container">{props.renderActions(sampleRow)}</div>
+        <div data-testid="bottom-bar-container">{props.renderBottomBar(selectedRows)}</div>
+      </div>
+    );
   },
 }));
+
+const useQueryMock = useQuery as unknown as Mock;
+const getAccessTokenMock = getAccessToken as unknown as Mock;
+const fetchUsersPageMock = fetchUsersPage as unknown as Mock;
 
 describe('<UsersTable />', () => {
   beforeEach(async () => {
@@ -45,43 +83,45 @@ describe('<UsersTable />', () => {
     await i18nTest.changeLanguage('en');
   });
 
-  it('configure PaginatedTable avec les bonnes colonnes et paramètres de base', () => {
+  it('configure PaginatedTable with the correct columns and basic settings', () => {
     /* Arrange */
     renderWithProviders(<UsersTable />);
 
-    /* Assert */
+    /* Act */
     expect(latestPaginatedProps).toBeDefined();
-
     const props = latestPaginatedProps!;
-    expect(props.initialLimit).toBe(10);
 
+    /* Assert */
+    expect(props.initialLimit).toBe(10);
     expect(props.getRowId(sampleRow)).toBe(sampleRow.email);
 
     const keys = props.columns.map((c) => c.key);
     expect(keys).toEqual(['email', 'role', 'enabled', 'api_key']);
   });
 
-  it('rend le bouton "Add user" quand onAddUser est fourni et déclenche le handler au clic', () => {
+  it("renders the 'Add user' button when onAddUser is provided and triggers the handler on click", () => {
     /* Arrange */
     const onAddUser = vi.fn();
-    renderWithProviders(<UsersTable onAddUser={onAddUser} />);
 
     /* Act */
-    const addButton = screen.getByRole('button', { name: /add user/i });
+    renderWithProviders(<UsersTable onAddUser={onAddUser} />);
 
-    /* Assert */
+    const addButton = screen.getByRole('button', { name: /add user/i });
     expect(addButton).toBeInTheDocument();
 
     fireEvent.click(addButton);
+
+    /* Assert */
     expect(onAddUser).toHaveBeenCalledTimes(1);
   });
 
-  it('déclenche les handlers de ligne (approve/edit/delete) pour un USER', () => {
+  it('triggers the line handlers (approve/edit/delete) for a USER', () => {
     /* Arrange */
     const onApproveDisapproveUser = vi.fn();
     const onEditUser = vi.fn();
     const onDeleteUser = vi.fn();
 
+    /* Act */
     renderWithProviders(
       <UsersTable
         onApproveDisapproveUser={onApproveDisapproveUser}
@@ -90,20 +130,16 @@ describe('<UsersTable />', () => {
       />,
     );
 
-    expect(latestPaginatedProps).toBeDefined();
-    const { renderActions } = latestPaginatedProps!;
-
-    const { getAllByRole } = renderWithProviders(<>{renderActions(sampleRow)}</>);
-    const buttons = getAllByRole('button');
-
-    expect(buttons.length).toBe(3);
-
-    /* Act */
-    fireEvent.click(buttons[0]); // approve / disable
-    fireEvent.click(buttons[1]); // edit
-    fireEvent.click(buttons[2]); // delete
+    const actionsContainer = screen.getByTestId('actions-container');
+    const buttons = within(actionsContainer).getAllByRole('button');
 
     /* Assert */
+    expect(buttons.length).toBe(3);
+
+    fireEvent.click(buttons[0]);
+    fireEvent.click(buttons[1]);
+    fireEvent.click(buttons[2]);
+
     expect(onApproveDisapproveUser).toHaveBeenCalledTimes(1);
     expect(onApproveDisapproveUser).toHaveBeenCalledWith(sampleRow);
 
@@ -114,7 +150,7 @@ describe('<UsersTable />', () => {
     expect(onDeleteUser).toHaveBeenCalledWith(sampleRow);
   });
 
-  it('désactive les actions (approve/delete) pour un ADMIN, mais pas "edit"', () => {
+  it('disables the actions (approve/delete) for an ADMIN, but not "edit"', () => {
     /* Arrange */
     const onApproveDisapproveUser = vi.fn();
     const onEditUser = vi.fn();
@@ -129,7 +165,6 @@ describe('<UsersTable />', () => {
     );
 
     expect(latestPaginatedProps).toBeDefined();
-    const { renderActions } = latestPaginatedProps!;
 
     const adminRow: UserDto = {
       email: 'admin@example.com',
@@ -139,39 +174,40 @@ describe('<UsersTable />', () => {
       password: 'Admin!',
     };
 
-    const { getAllByRole } = renderWithProviders(<>{renderActions(adminRow)}</>);
-    const buttons = getAllByRole('button');
-    expect(buttons.length).toBe(3);
+    /* Act */
+    const { getAllByRole } = renderWithProviders(
+      <>{latestPaginatedProps!.renderActions(adminRow)}</>,
+    );
 
-    const approveButton = buttons[0];
-    const editButton = buttons[1];
-    const deleteButton = buttons[2];
+    /* Assert */
+    const buttons = getAllByRole('button');
+
+    expect(buttons.length).toBeGreaterThanOrEqual(3);
+
+    const [approveButton, editButton, deleteButton] = buttons.slice(-3);
 
     expect(approveButton).toBeDisabled();
     expect(deleteButton).toBeDisabled();
     expect(editButton).not.toBeDisabled();
   });
 
-  it('déclenche les handlers de bulk enable/disable avec la sélection', () => {
+  it('triggers the bulk enable/disable handlers with the selection', () => {
     /* Arrange */
     const onBulkEnable = vi.fn();
     const onBulkDisable = vi.fn();
 
+    /* Act */
     renderWithProviders(<UsersTable onBulkEnable={onBulkEnable} onBulkDisable={onBulkDisable} />);
 
-    expect(latestPaginatedProps).toBeDefined();
-    const { renderBottomBar } = latestPaginatedProps!;
-
-    const { getAllByRole } = renderWithProviders(<>{renderBottomBar(selectedRows)}</>);
-    const bulkButtons = getAllByRole('button');
+    /* Assert */
+    const bottomBar = screen.getByTestId('bottom-bar-container');
+    const bulkButtons = within(bottomBar).getAllByRole('button');
 
     expect(bulkButtons.length).toBe(2);
 
-    /* Act */
     fireEvent.click(bulkButtons[0]);
     fireEvent.click(bulkButtons[1]);
 
-    /* Assert */
     expect(onBulkEnable).toHaveBeenCalledTimes(1);
     expect(onBulkEnable).toHaveBeenCalledWith(selectedRows);
 
@@ -179,7 +215,7 @@ describe('<UsersTable />', () => {
     expect(onBulkDisable).toHaveBeenCalledWith(selectedRows);
   });
 
-  it('render de la colonne "role" affiche le label traduit', () => {
+  it('render of the "role" column displays the translated label', () => {
     /* Arrange */
     renderWithProviders(<UsersTable />);
 
@@ -203,7 +239,7 @@ describe('<UsersTable />', () => {
     expect(getByText(/admin/i)).toBeInTheDocument();
   });
 
-  it('render de la colonne "enabled" affiche Enabled / Disabled selon la valeur', () => {
+  it('Rendering the "enabled" column displays Enabled / Disabled depending on the value', () => {
     /* Arrange */
     renderWithProviders(<UsersTable />);
 
@@ -241,7 +277,7 @@ describe('<UsersTable />', () => {
     expect(getByTextDisabled(/disabled/i)).toBeInTheDocument();
   });
 
-  it('render de la colonne "api_key" masque la clé ou affiche "none"', () => {
+  it('rendering the column "api_key" hides the key or displays "none"', () => {
     /* Arrange */
     renderWithProviders(<UsersTable />);
 
@@ -277,5 +313,98 @@ describe('<UsersTable />', () => {
     /* Assert */
     expect(getByTextMasked('••••••••••••')).toBeInTheDocument();
     expect(getByTextNone(/none/i)).toBeInTheDocument();
+  });
+
+  it('configure useUsersPage to call useQuery with token and fetchUsersPage', async () => {
+    /* Arrange */
+    getAccessTokenMock.mockReturnValue('token-123');
+
+    const queryResult = {
+      data: undefined,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+      isFetching: false,
+    };
+
+    let capturedConfig: any;
+
+    useQueryMock.mockImplementation((config: any) => {
+      capturedConfig = config;
+      return queryResult;
+    });
+
+    /* Act */
+    renderWithProviders(<UsersTable />);
+
+    /* Assert */
+    expect(latestPaginatedProps).toBeDefined();
+
+    const params = {
+      page: 1,
+      limit: 10,
+      sortBy: undefined,
+      sortDir: undefined,
+    };
+
+    const result = latestPaginatedProps!.usePageQuery(params as any);
+    expect(result).toBe(queryResult);
+
+    expect(useQueryMock).toHaveBeenCalledTimes(1);
+    expect(capturedConfig.queryKey).toEqual(['users', params]);
+
+    fetchUsersPageMock.mockResolvedValueOnce({
+      data: [],
+      meta: { page: 1, totalPages: 1, totalItems: 0 },
+    });
+
+    await capturedConfig.queryFn();
+
+    expect(getAccessTokenMock).toHaveBeenCalled();
+    expect(fetchUsersPageMock).toHaveBeenCalledWith(
+      expect.any(String), // API_BASE_URL
+      'token-123',
+      params,
+    );
+
+    const previousPage = { data: ['something'], meta: { page: 1 } };
+    expect(capturedConfig.placeholderData(previousPage)).toBe(previousPage);
+  });
+
+  it('throws a "Missing access token" error when no token is present', () => {
+    /* Arrange */
+    getAccessTokenMock.mockReturnValue(undefined);
+
+    let capturedConfig: any;
+
+    useQueryMock.mockImplementation((config: any) => {
+      capturedConfig = config;
+      return {
+        data: undefined,
+        isLoading: false,
+        isError: false,
+        error: null,
+        refetch: vi.fn(),
+        isFetching: false,
+      };
+    });
+
+    /* Act */
+    renderWithProviders(<UsersTable />);
+
+    const params = {
+      page: 1,
+      limit: 10,
+      sortBy: undefined,
+      sortDir: undefined,
+    };
+
+    latestPaginatedProps!.usePageQuery(params as any);
+
+    /* Assert */
+    expect(() => capturedConfig.queryFn()).toThrow('Missing access token');
+    expect(getAccessTokenMock).toHaveBeenCalled();
+    expect(fetchUsersPageMock).not.toHaveBeenCalled();
   });
 });
