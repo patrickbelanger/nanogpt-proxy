@@ -101,8 +101,10 @@ describe('<UsersTable />', () => {
   });
 
   it('configure PaginatedTable with the correct columns and basic settings', () => {
+    /* Act */
     renderWithProviders(<UsersTable />);
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
     const props = latestPaginatedProps!;
 
@@ -114,10 +116,13 @@ describe('<UsersTable />', () => {
   });
 
   it("renders the 'Add user' button when onAddUser is provided and triggers the handler on click", () => {
+    /* Arrange */
     const onAddUser = vi.fn();
 
+    /* Act */
     renderWithProviders(<UsersTable onAddUser={onAddUser} />);
 
+    /* Assert */
     const addButton = screen.getByRole('button', { name: /add user/i });
     expect(addButton).toBeInTheDocument();
 
@@ -127,10 +132,12 @@ describe('<UsersTable />', () => {
   });
 
   it('triggers the line handlers (approve/edit/delete) for a USER', () => {
+    /* Arrange */
     const onApproveDisapproveUser = vi.fn();
     const onEditUser = vi.fn();
     const onDeleteUser = vi.fn();
 
+    /* Act */
     renderWithProviders(
       <UsersTable
         onApproveDisapproveUser={onApproveDisapproveUser}
@@ -142,6 +149,7 @@ describe('<UsersTable />', () => {
     const actionsContainer = screen.getByTestId('actions-container');
     const buttons = within(actionsContainer).getAllByRole('button');
 
+    /* Assert */
     expect(buttons.length).toBe(3);
 
     fireEvent.click(buttons[0]);
@@ -159,10 +167,12 @@ describe('<UsersTable />', () => {
   });
 
   it('disables the actions (approve/delete) for an ADMIN, but not "edit"', () => {
+    /* Arrange */
     const onApproveDisapproveUser = vi.fn();
     const onEditUser = vi.fn();
     const onDeleteUser = vi.fn();
 
+    /* Act */
     renderWithProviders(
       <UsersTable
         onApproveDisapproveUser={onApproveDisapproveUser}
@@ -171,6 +181,7 @@ describe('<UsersTable />', () => {
       />,
     );
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
 
     const adminRow: UserDto = {
@@ -197,14 +208,17 @@ describe('<UsersTable />', () => {
   });
 
   it('triggers the bulk enable/disable handlers with the selection', () => {
+    /* Arrange */
     const onBulkEnable = vi.fn();
     const onBulkDisable = vi.fn();
 
+    /* Act */
     renderWithProviders(<UsersTable onBulkEnable={onBulkEnable} onBulkDisable={onBulkDisable} />);
 
     const bottomBar = screen.getByTestId('bottom-bar-container');
     const bulkButtons = within(bottomBar).getAllByRole('button');
 
+    /* Assert */
     expect(bulkButtons.length).toBe(2);
 
     fireEvent.click(bulkButtons[0]);
@@ -218,8 +232,10 @@ describe('<UsersTable />', () => {
   });
 
   it('render of the "role" column displays the translated label', () => {
+    /* Act */
     renderWithProviders(<UsersTable />);
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
     const roleCol = latestPaginatedProps!.columns.find((c) => c.key === 'role');
     expect(roleCol).toBeDefined();
@@ -239,8 +255,10 @@ describe('<UsersTable />', () => {
   });
 
   it('Rendering the "enabled" column displays Enabled / Disabled depending on the value', () => {
+    /* Act */
     renderWithProviders(<UsersTable />);
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
     const enabledCol = latestPaginatedProps!.columns.find((c) => c.key === 'enabled');
     expect(enabledCol).toBeDefined();
@@ -274,8 +292,10 @@ describe('<UsersTable />', () => {
   });
 
   it('rendering the column "api_key" hides the key or displays "none"', () => {
+    /* Act */
     renderWithProviders(<UsersTable />);
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
     const apiKeyCol = latestPaginatedProps!.columns.find((c) => c.key === 'api_key');
     expect(apiKeyCol).toBeDefined();
@@ -309,6 +329,7 @@ describe('<UsersTable />', () => {
   });
 
   it('configure useUsersPage to call useQuery with token and fetchUsersPage', async () => {
+    /* Arrange */
     getAccessTokenMock.mockReturnValue('token-123');
 
     const queryResult = {
@@ -327,8 +348,10 @@ describe('<UsersTable />', () => {
       return queryResult;
     });
 
+    /* Act */
     renderWithProviders(<UsersTable />);
 
+    /* Assert */
     expect(latestPaginatedProps).toBeDefined();
 
     const params = {
@@ -366,6 +389,7 @@ describe('<UsersTable />', () => {
   });
 
   it('throws a "Missing access token" error when no token is present', () => {
+    /* Arrange */
     getAccessTokenMock.mockReturnValue(undefined);
 
     let capturedConfig: UsersQueryConfig | undefined;
@@ -382,6 +406,7 @@ describe('<UsersTable />', () => {
       };
     });
 
+    /* Act */
     renderWithProviders(<UsersTable />);
 
     const params = {
@@ -393,6 +418,7 @@ describe('<UsersTable />', () => {
 
     latestPaginatedProps!.usePageQuery(params as unknown);
 
+    /* Assert */
     expect(capturedConfig).toBeDefined();
     const effectiveConfig = capturedConfig!;
 
