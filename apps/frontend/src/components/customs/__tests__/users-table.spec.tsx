@@ -348,7 +348,7 @@ describe('<UsersTable />', () => {
       sortDir: undefined,
     };
 
-    const result = latestPaginatedProps!.usePageQuery(params as any);
+    const result = latestPaginatedProps!.usePageQuery(params as unknown);
     expect(result).toBe(queryResult);
 
     expect(useQueryMock).toHaveBeenCalledTimes(1);
@@ -362,11 +362,7 @@ describe('<UsersTable />', () => {
     await capturedConfig.queryFn();
 
     expect(getAccessTokenMock).toHaveBeenCalled();
-    expect(fetchUsersPageMock).toHaveBeenCalledWith(
-      expect.any(String), // API_BASE_URL
-      'token-123',
-      params,
-    );
+    expect(fetchUsersPageMock).toHaveBeenCalledWith(expect.any(String), 'token-123', params);
 
     const previousPage = { data: ['something'], meta: { page: 1 } };
     expect(capturedConfig.placeholderData(previousPage)).toBe(previousPage);
@@ -400,7 +396,7 @@ describe('<UsersTable />', () => {
       sortDir: undefined,
     };
 
-    latestPaginatedProps!.usePageQuery(params as any);
+    latestPaginatedProps!.usePageQuery(params as unknown);
 
     /* Assert */
     expect(() => capturedConfig.queryFn()).toThrow('Missing access token');
