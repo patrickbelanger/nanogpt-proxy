@@ -168,24 +168,19 @@ describe('<PaginatedTable />', () => {
       />,
     );
 
-    // texte de sélection initial
     expect(screen.getByText(/no item selected/i)).toBeInTheDocument();
 
-    // loader de rafraîchissement
     expect(screen.getByLabelText(/refreshing/i)).toBeInTheDocument();
 
-    // select all
     const selectAllCheckbox = screen.getByLabelText('Select all rows on this page');
     fireEvent.click(selectAllCheckbox);
 
-    // maintenant, "items selected" (matcher plus souple)
     const selectionText = screen.getByText(
       (content) =>
         content.toLowerCase().includes('item') && content.toLowerCase().includes('selected'),
     );
     expect(selectionText).toBeInTheDocument();
 
-    // bottom bar doit être visible avec notre bouton
     const bulkButton = screen.getByRole('button', { name: /bulk action/i });
     fireEvent.click(bulkButton);
 
@@ -316,7 +311,6 @@ describe('<PaginatedTable />', () => {
 
     const nameHeaderButton = screen.getByRole('button', { name: /name/i });
 
-    // 1er clic -> ASC
     fireEvent.click(nameHeaderButton);
 
     await waitFor(() => {
@@ -324,7 +318,6 @@ describe('<PaginatedTable />', () => {
       expect(lastQueryParams!.sortDir).toBe('ASC');
     });
 
-    // 2e clic -> DESC
     fireEvent.click(nameHeaderButton);
 
     await waitFor(() => {

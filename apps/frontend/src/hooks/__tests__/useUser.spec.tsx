@@ -82,7 +82,7 @@ describe('useUser hook', () => {
     const queryClient = createQueryClient();
     const wrapper = createWrapper(queryClient);
 
-    apiMock.post.mockResolvedValueOnce({}); // on ne lit pas la réponse
+    apiMock.post.mockResolvedValueOnce({});
 
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
