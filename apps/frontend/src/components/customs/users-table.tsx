@@ -12,7 +12,7 @@ import type { UserDto } from '../../dtos/userDto.ts';
 import type { ColumnDef } from '../elements/tables/column-def';
 
 type UsersTableProps = {
-  onApproveDisapproveUser?: (user: UserDto) => void;
+  onEnableDisableUser?: (user: UserDto) => void;
   onEditUser?: (user: UserDto) => void;
   onDeleteUser?: (user: UserDto) => void;
   onBulkDisable?: (users: UserDto[]) => void;
@@ -21,14 +21,8 @@ type UsersTableProps = {
 };
 
 function UsersTable(props: UsersTableProps) {
-  const {
-    onApproveDisapproveUser,
-    onEditUser,
-    onDeleteUser,
-    onBulkDisable,
-    onBulkEnable,
-    onAddUser,
-  } = props;
+  const { onEnableDisableUser, onEditUser, onDeleteUser, onBulkDisable, onBulkEnable, onAddUser } =
+    props;
   const { t } = useTranslation();
 
   const columns: ColumnDef<UserDto>[] = [
@@ -112,10 +106,12 @@ function UsersTable(props: UsersTableProps) {
         usePageQuery={useUsersPage}
         renderActions={(row) => (
           <Group>
-            {onApproveDisapproveUser && (
+            {onEnableDisableUser && (
               <UnstyledButton
+                data-cy={`enable-disable-btn-${row}`}
+                data-testid={`enable-disable-btn-${row}`}
                 size="xs"
-                onClick={() => onApproveDisapproveUser(row)}
+                onClick={() => onEnableDisableUser(row)}
                 disabled={row.role === 'ADMIN'}
                 style={{
                   cursor: row.role === 'ADMIN' ? 'not-allowed' : 'pointer',
@@ -138,7 +134,12 @@ function UsersTable(props: UsersTableProps) {
               </UnstyledButton>
             )}
             {onEditUser && (
-              <UnstyledButton size="xs" onClick={() => onEditUser(row)}>
+              <UnstyledButton
+                data-cy={`edit-user-btn-${row}`}
+                data-testid={`edit-user-btn-${row}`}
+                size="xs"
+                onClick={() => onEditUser(row)}
+              >
                 <Tooltip
                   arrowOffset={50}
                   arrowSize={8}
@@ -153,6 +154,8 @@ function UsersTable(props: UsersTableProps) {
 
             {onDeleteUser && (
               <UnstyledButton
+                data-cy={`delete-user-btn-${row}`}
+                data-testid={`delete-user-btn-${row}`}
                 size="xs"
                 onClick={() => onDeleteUser(row)}
                 disabled={row.role === 'ADMIN'}
@@ -178,6 +181,8 @@ function UsersTable(props: UsersTableProps) {
           <>
             {onBulkEnable && (
               <Button
+                data-cy="bulk-enable-btn"
+                data-testid="bulk-enable-btn"
                 size="xs"
                 variant="light"
                 color="green"
@@ -188,6 +193,8 @@ function UsersTable(props: UsersTableProps) {
             )}
             {onBulkDisable && (
               <Button
+                data-cy="bulk-disable-btn"
+                data-testid="bulk-disable-btn"
                 size="xs"
                 variant="light"
                 color="orange"

@@ -140,7 +140,7 @@ describe('<UsersTable />', () => {
     /* Act */
     renderWithProviders(
       <UsersTable
-        onApproveDisapproveUser={onApproveDisapproveUser}
+        onEnableDisableUser={onApproveDisapproveUser}
         onEditUser={onEditUser}
         onDeleteUser={onDeleteUser}
       />,
@@ -175,7 +175,7 @@ describe('<UsersTable />', () => {
     /* Act */
     renderWithProviders(
       <UsersTable
-        onApproveDisapproveUser={onApproveDisapproveUser}
+        onEnableDisableUser={onApproveDisapproveUser}
         onEditUser={onEditUser}
         onDeleteUser={onDeleteUser}
       />,

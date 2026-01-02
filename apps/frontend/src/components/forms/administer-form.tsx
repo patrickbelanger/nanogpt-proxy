@@ -24,7 +24,7 @@ function AdministerForm() {
       </Group>
       <UsersTable
         onAddUser={createUserHandlers.open}
-        onApproveDisapproveUser={(user) => {
+        onEnableDisableUser={(user) => {
           console.info('Approve/DisapproveUser ' + user);
           toggleEnabled(user);
         }}
