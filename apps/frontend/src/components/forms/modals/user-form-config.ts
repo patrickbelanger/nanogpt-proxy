@@ -51,7 +51,6 @@ export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserDto
       validate: (value) => {
         if (!value) {
           return t('modals.createUpdateUser.email.requiredError');
-          //return 'Email is required';
         }
         return null;
       },
@@ -63,7 +62,6 @@ export function buildUserFields(mode: UserFormMode, t: TFn): FieldConfig<UserDto
       placeholder: isEdit
         ? t('modals.createUpdateUser.password.placeholderEdit')
         : t('modals.createUpdateUser.password.placeholder'),
-      //placeholder: isEdit ? 'Leave empty to keep current password' : 'Set an initial password',
       required: !isEdit,
       validate: (value) => {
         if (!isEdit && !value) {

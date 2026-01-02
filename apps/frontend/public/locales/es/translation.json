@@ -134,7 +134,8 @@
         "placeholder": "UUID v4 opcional"
       },
       "email": {
-        "label": "Correo electrónico"
+        "label": "Correo electrónico",
+        "requiredError": "El correo electrónico es obligatorio"
       },
       "enabled": {
         "label": "Activado"
