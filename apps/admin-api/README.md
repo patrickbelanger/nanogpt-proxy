@@ -26,6 +26,13 @@ JWT_EXPIRES_IN=5m
 JWT_REFRESH_EXPIRES_IN=7d
 JWT_REFRESH_SECRET=<copy 2nd hmac secret - base 64 here>
 JWT_BLACKLIST_TTL_SECONDS=86400
+SMTP_HOST=smtp.mailersend.net
+SMTP_PORT=587
+SMTP_SECURE=true
+SMTP_USER=<mailersend@user>
+SMTP_PASSWORD=<mailersend@password>
+EMAIL_FROM_ADDRESS=no-reply@nanogpt.local
+EMAIL_FROM_NAME=NanoGPT Admin
 ```
 
 Remark: For production, password should be store in a Vault (like Hashicorp Vault OSS and injected while building the

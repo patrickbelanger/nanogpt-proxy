@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SecurityModule } from './security/security.module';
 import { HealthModule } from '@nanogpt-monorepo/core';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { SmtpEmailModule } from './smtp-email/smtp-email.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigurationModule } from './configuration/configuration.module';
     HealthModule,
     SecurityModule,
     UsersModule,
+    SmtpEmailModule,
   ],
 })
 export class AppModule {}
